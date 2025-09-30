@@ -11,16 +11,19 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "i18n:check": "i18n-check --source es --locales messages"
   },
   "dependencies": {
     "lucide-react": "0.544.0",
     "next": "15.5.4",
+    "next-intl": "4.3.9",
     "react": "19.1.1",
     "react-dom": "19.1.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@lingual/i18n-check": "0.8.8",
     "@tailwindcss/postcss": "4.1.13",
     "@types/node": "20.19.18",
     "@types/react": "19.1.15",
