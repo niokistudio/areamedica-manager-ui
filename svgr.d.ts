@@ -5,6 +5,7 @@ declare module "*.svg" {
 }
 
 declare module "*.svg?url" {
+  // biome-ignore lint/suspicious/noExplicitAny: This is a global config
   const content: any
   export default content
 }

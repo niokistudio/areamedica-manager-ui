@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang={defaultLocale}>
-      <body className={`${IBMPlexSans.variable} antialiased`}>
+      <body className={`${IBMPlexSans.variable} antialiased font-plex-sans`}>
         <GlobalProvider>{children}</GlobalProvider>
       </body>
     </html>

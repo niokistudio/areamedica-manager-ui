@@ -169,7 +169,7 @@ HeroUI provides pre-built, accessible components:
 
 The application uses CSS custom properties for theming:
 
-```css
+```
 --color-background
 --color-muted
 --color-muted-foreground
