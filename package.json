@@ -6,6 +6,7 @@
     "node": ">=24.9.0",
     "npm": ">=11.6.0"
   },
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
@@ -16,6 +17,8 @@
   },
   "dependencies": {
     "@heroui/button": "^2.2.27",
+    "@heroui/card": "^2.2.25",
+    "@heroui/input": "^2.4.28",
     "@heroui/system": "^2.4.23",
     "@heroui/theme": "^2.4.23",
     "framer-motion": "^12.23.24",
@@ -28,6 +31,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
     "@lingual/i18n-check": "0.8.8",
+    "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "4.1.13",
     "@types/node": "20.19.18",
     "@types/react": "19.1.15",

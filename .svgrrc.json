@@ -1,0 +1,6 @@
+{
+  "memo": true,
+  "svgoConfig": {
+    "plugins": ["preset-default", "removeDimensions"]
+  }
+}
