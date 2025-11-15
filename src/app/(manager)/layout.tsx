@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { AuthHeader } from "@/app/(auth)/components/AuthHeader"
+import { ManagerHeader } from "@/app/(manager)/components/ManagerHeader"
 import { Footer } from "@/components/layout/Footer"
 
 export default function AuthLayout({
@@ -8,9 +8,9 @@ export default function AuthLayout({
   children: ReactNode
 }>) {
   return (
-    <div className="h-full grid grid-rows-[1fr_auto] grid-cols-1">
+    <div className="h-full grid grid-rows-[auto_1fr_auto] grid-cols-1">
+      <ManagerHeader />
       <div className="flex flex-col bg-background">
-        <AuthHeader />
         <main className="p-4 flex-1">{children}</main>
       </div>
       <Footer />
