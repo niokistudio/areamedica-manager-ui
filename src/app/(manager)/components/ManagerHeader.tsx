@@ -2,8 +2,10 @@ import Logo from "@/assets/logo/logo-areamedica.svg"
 
 export function ManagerHeader() {
   return (
-    <header className="flex justify-start py-3 px-10 bg-primary">
-      <Logo className="text-primary-foreground h-8" />
-    </header>
+    <div className="bg-primary">
+      <header className="flex justify-center max-w-7xl mx-auto py-3 px-4 md:justify-start md:px-6 lg:px-10">
+        <Logo className="text-primary-foreground h-8 flex-shrink-0" />
+      </header>
+    </div>
   )
 }
