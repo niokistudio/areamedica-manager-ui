@@ -1,3 +1,10 @@
-import axios from "axios"
+import { axiosClient } from "@/lib/axios/client"
 
-export const fetcher = (url: string) => axios.get(url).then((res) => res.data)
+/**
+ * Default fetcher for GET requests
+ * @param url - The URL to fetch (can be relative to baseURL)
+ * @returns The response data
+ */
+export async function fetcher<T = unknown>(url: string): Promise<T> {
+  return axiosClient.get<T>(url).then((res) => res.data)
+}
