@@ -29,6 +29,11 @@ Areamedica Manager UI is a modern healthcare management application built with N
 - **next-intl**: v4.3.9 (i18n for App Router)
 - **@lingual/i18n-check**: Translation validation
 
+### Data Fetching & State Management
+- **Axios**: HTTP client for browser/client-side requests
+- **SWR**: React Hooks for data fetching and caching
+- **Native Fetch**: Server-side data fetching with Next.js
+
 ## Project Structure
 
 ```
@@ -41,20 +46,44 @@ areamedica-manager-ui/
 │   │   │   ├── login/
 │   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx            # Auth layout wrapper
+│   │   ├── (manager)/                # Manager route group
+│   │   │   ├── components/           # Manager-specific components
+│   │   │   ├── transactions/
+│   │   │   │   └── page.tsx
+│   │   │   └── layout.tsx            # Manager layout wrapper
 │   │   ├── layout.tsx                # Root layout
 │   │   ├── page.tsx                  # Home page
 │   │   ├── globals.css               # Global styles
 │   │   └── favicon.ico
+│   ├── components/                   # Shared components
+│   │   └── Footer.tsx
 │   ├── i18n/
 │   │   └── request.ts                # i18n configuration
-│   └── lib/                          # Shared libraries and utilities
-│       ├── GlobalProvider.tsx        # Root provider wrapper
-│       ├── fonts/
-│       │   └── index.ts              # Font configuration
-│       ├── hero-ui/
-│       │   └── HeroUIClientProvider.tsx
-│       └── next-intl/
-│           └── config.ts
+│   ├── lib/                          # Shared external libraries and utilities
+│   │   ├── GlobalProvider.tsx        # Root provider wrapper
+│   │   ├── axios/
+│   │   │   ├── client.ts             # Axios client with interceptors
+│   │   ├── fetch/
+│   │   │   └── server.ts             # Server-side fetch utilities
+│   │   ├── fonts/
+│   │   │   └── index.ts              # Font configuration
+│   │   ├── hero-ui/
+│   │   │   └── HeroUIClientProvider.tsx
+│   │   ├── next-intl/
+│   │   │   └── config.ts
+│   │   ├── swr/
+│   │   │   ├── SWRClientProvider.tsx # SWR configuration
+│   │   │   └── fetcher.ts            # SWR fetcher function
+│   │   └── tokens/
+│   │       └── client.ts             # Client-side token management
+│   ├── types/                        # TypeScript type definitions
+│   │   ├── api.ts                    # API types
+│   │   ├── transactions.ts           # Transaction types
+│   │   └── user.ts                   # User types
+│   └── utils/                        # Utility functions
+│       ├── local-storage.ts          # Local storage abstractions
+│       └── cookies/
+│           └── server.ts             # Server-side cookie utilities
 ├── messages/                         # Translation files
 │   └── es.json                       # Spanish translations
 ├── public/                           # Static assets
@@ -106,14 +135,146 @@ This allows for:
 - Easy addition of new providers
 - Clean separation of concerns
 
+## Data Layer Architecture
+
+### HTTP Client Configuration
+
+The application implements a dual HTTP client strategy optimized for Next.js:
+
+#### Client-Side (Axios)
+**Location**: `src/lib/axios/client.ts`
+
+Features:
+- Automatic token refresh on 401 errors
+- Request/response interceptors
+- Credential support for cookies
+- Consistent error transformation to `APIClientError`
+
+```typescript
+import { axiosClient } from '@/lib/axios/client'
+
+// Automatically includes auth token and handles refresh
+const response = await axiosClient.get('/api/users')
+```
+
+#### Server-Side (Native Fetch)
+**Location**: `src/lib/fetch/server.ts`
+
+Features:
+- Server-only operations with `"use server"` directive
+- Cookie-based authentication
+- Type-safe helper functions
+- Consistent error transformation to `APIServerError`
+
+```typescript
+import { fetchGet, fetchPost } from '@/lib/fetch/server'
+
+// In Server Components or Server Actions
+const data = await fetchGet<User>('/api/users/me')
+```
+
+### Error Handling
+
+The application uses a type-safe error handling system:
+
+**Types**: `src/types/api.ts`
+
+```typescript
+interface APIError {
+  message: string
+  status: number
+  code: APIErrorCode
+}
+```
+
+Error codes are defined as enums for type safety:
+- `APIErrorCode`: Error codes
+
+### State Management with SWR
+
+**Location**: `src/lib/swr/`
+
+SWR provides React Hooks for data fetching with:
+- Automatic caching and revalidation
+- Optimistic UI updates
+- Error retry logic
+- Focus revalidation
+
+**Configuration**: `src/lib/swr/SWRClientProvider.tsx`
+- Custom retry logic for 4xx/5xx errors
+- Global error handling
+- Deduplication of requests
+
+## Utilities
+
+### Local Storage
+**Location**: `src/utils/local-storage.ts`
+
+Type-safe abstractions for browser local storage with SSR safety:
+
+```typescript
+import { getItem, setItem, removeItem } from '@/utils/local-storage'
+
+// Automatically handles JSON serialization
+setItem('user', { id: 1, name: 'John' })
+const user = getItem<User>('user')
+
+// Namespaced storage
+const authStorage = createNamespacedStorage('auth')
+authStorage.setItem('token', 'abc123')
+```
+
+Features:
+- Automatic JSON serialization/deserialization
+- SSR-safe (checks for `window`)
+- Error handling with console logging
+- Namespaced storage for organization
+
+### Cookie Management
+**Location**: `src/utils/cookies/`
+
+Separate utilities for client and server cookie operations:
+
+#### Server-Side Cookies
+```typescript
+import { getCookie, setCookie, removeCookie } from '@/utils/cookies/server'
+
+// Secure defaults based on environment
+await setCookie('session', token, {
+  maxAge: 60 * 60 * 24 * 7, // 7 days
+  // Automatically sets: secure (prod), httpOnly, sameSite
+})
+```
+
+**Security Defaults**:
+- **Production**: `secure=true`, `httpOnly=true`, `sameSite=lax`
+- **Development**: `secure=false`, `httpOnly=true`, `sameSite=lax`
+
+Features:
+- Wraps Next.js `cookies()` API
+- Automatic security configurations
+- Type-safe options
+- Async/await interface
+
+### Token Management
+**Location**: `src/lib/tokens/client.ts`
+
+Client-side token management utilities:
+- Access token storage and retrieval
+- Token validation
+- Automatic cleanup
+
 ## Authentication
 
-The authentication system is structured but not yet fully implemented:
+### Current Implementation
+
+The authentication system includes:
 
 - **Route Group**: `(auth)` contains all authentication-related pages
 - **Dedicated Layout**: `src/app/(auth)/layout.tsx` provides consistent auth page styling
 - **Login Page**: `src/app/(auth)/login/page.tsx`
 - **Auth Footer**: `src/app/(auth)/components/AuthFooter.tsx` for shared footer content
+- **Token Management**: Automatic refresh on 401 errors
 
 The architecture is ready for integration with authentication libraries like NextAuth, Clerk, or custom solutions.
 
@@ -238,29 +399,39 @@ npm start
 - Server-side rendering
 - Static optimization
 
+## Implemented Features
+
+### ✅ Data Layer
+- ✅ HTTP Client (Axios for client-side, Fetch for server-side)
+- ✅ Data fetching library (SWR)
+- ✅ Type-safe error handling
+
+### ✅ Utilities
+- ✅ Local storage abstractions
+- ✅ Cookie management (server-side)
+- ✅ Token management
+
 ## Future Considerations
 
 The architecture is prepared for but does not yet include:
 
-### Data Layer
+### Database & Backend
 - Database integration (Prisma, Drizzle, etc.)
 - API routes (`src/app/api/`)
 - Server Actions for mutations
-- Data fetching library (React Query, SWR)
+- Background jobs and queues
 
 ### Form Management
 - Form library (React Hook Form, Formik)
-- Validation (Zod, Yup)
+- Schema validation (Zod, Yup)
+- Form state management
 
-### State Management
-- Global state library (Zustand, Jotai, Redux) if needed
-- Most state can be handled with Server Components and Server Actions
-
-### Authentication
-- Complete authentication implementation
-- Session management
-- Protected routes
-- Role-based access control
+### Additional Features
+- File upload utilities
+- Real-time updates (WebSockets, Server-Sent Events)
+- Advanced caching strategies
+- Rate limiting and throttling
+- Analytics integration
 
 ## Configuration Files Reference
 
@@ -374,6 +545,6 @@ export default function LoginPage() {
 
 ---
 
-**Last Updated**: 2025-11-12
+**Last Updated**: 2025-11-20
 **Next.js Version**: 15.5.4
 **React Version**: 19.1.1
