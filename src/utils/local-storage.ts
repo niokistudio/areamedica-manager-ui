@@ -39,7 +39,10 @@ export function getItem<T>(key: string): T | null {
 
     return JSON.parse(item) as T
   } catch (error) {
-    console.error(`Error getting/parsing item from localStorage (${key}):`, error)
+    console.error(
+      `Error getting/parsing item from localStorage (${key}):`,
+      error,
+    )
     return null
   }
 }
@@ -60,7 +63,10 @@ export function setItem<T>(key: string, value: T): boolean {
     window.localStorage.setItem(key, serialized)
     return true
   } catch (error) {
-    console.error(`Error setting/serializing item in localStorage (${key}):`, error)
+    console.error(
+      `Error setting/serializing item in localStorage (${key}):`,
+      error,
+    )
     return false
   }
 }

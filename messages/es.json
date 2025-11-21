@@ -19,5 +19,34 @@
       "submit": "Entrar",
       "submitting": "Entrando..."
     }
+  },
+  "TransactionsPage": {
+    "table": {
+      "column": {
+        "status": "Estado",
+        "reference": "Referencia",
+        "nationalId": "Cédula",
+        "name": "Nombre",
+        "phone": "Teléfono",
+        "date": "Fecha",
+        "amount": "Monto",
+        "type": "Tipo"
+      }
+    }
+  },
+  "ITransactions": {
+    "TransactionType": {
+      "TRANSACTION": "Transacción",
+      "PAYMENT": "Pago",
+      "TRANSFER": "Transferencia",
+      "REFUND": "Reembolso"
+    },
+    "TransactionStatus": {
+      "PENDING": "Pendiente",
+      "IN_PROGRESS": "En progreso",
+      "COMPLETED": "Completada",
+      "FAILED": "Fallida",
+      "CANCELLED": "Cancelada"
+    }
   }
 }

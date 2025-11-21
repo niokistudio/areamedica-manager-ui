@@ -20,6 +20,7 @@ export interface Transaction {
   bank: string
   transaction_type: TransactionType
   status: TransactionStatus
+  amount: number
   customer_full_name: string
   customer_phone: string
   customer_national_id: string
