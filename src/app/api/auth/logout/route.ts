@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server"
-import {
-  AUTH_ACCESS_TOKEN_COOKIE,
-  AUTH_REFRESH_TOKEN_COOKIE,
-} from "@/constants/cookies"
 import { handleAPIError } from "@/lib/errors/errorHandler"
-import { removeCookie } from "@/utils/cookies/server"
+import { removeAccessToken, removeRefreshToken } from "@/lib/tokens/server"
 
 /**
  * POST /api/auth/logout
@@ -13,10 +9,10 @@ import { removeCookie } from "@/utils/cookies/server"
 export async function POST() {
   try {
     // Clear refresh token cookie
-    await removeCookie(AUTH_REFRESH_TOKEN_COOKIE)
+    await removeRefreshToken()
 
     // Clear access token cookie
-    await removeCookie(AUTH_ACCESS_TOKEN_COOKIE)
+    await removeAccessToken()
 
     // Return success response
     return NextResponse.json(null, { status: 203 })

@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server"
-import {
-  AUTH_ACCESS_TOKEN_COOKIE,
-  AUTH_REFRESH_TOKEN_COOKIE,
-  AUTH_REFRESH_TOKEN_COOKIE_DURATION,
-} from "@/constants/cookies"
 import { AuthenticationError } from "@/lib/errors/AppError"
 import { handleAPIError } from "@/lib/errors/errorHandler"
+import {
+  getRefreshToken,
+  removeAccessToken,
+  removeRefreshToken,
+  setAccessToken,
+  setRefreshToken,
+} from "@/lib/tokens/server"
 import { $refreshTokens } from "@/services/auth.server"
-import { getCookie, removeCookie, setCookie } from "@/utils/cookies/server"
 
 /**
  * POST /api/auth/refresh
@@ -16,7 +17,7 @@ import { getCookie, removeCookie, setCookie } from "@/utils/cookies/server"
 export async function POST() {
   try {
     // Get refresh token from cookie
-    const refreshToken = await getCookie(AUTH_REFRESH_TOKEN_COOKIE)
+    const refreshToken = await getRefreshToken()
 
     if (!refreshToken) {
       throw new AuthenticationError("No refresh token found")
@@ -26,16 +27,14 @@ export async function POST() {
     const response = await $refreshTokens(refreshToken)
 
     // Update refresh token cookie with new token
-    await setCookie(AUTH_REFRESH_TOKEN_COOKIE, response.refresh_token, {
-      maxAge: AUTH_REFRESH_TOKEN_COOKIE_DURATION,
-    })
+    await setRefreshToken(response.refresh_token)
 
     // Update access token cookie
-    await setCookie(AUTH_ACCESS_TOKEN_COOKIE, response.access_token, {
+    await setAccessToken(response.access_token, {
       maxAge: response.expires_in,
     })
 
-    // Return new access token to the client
+    // Return a new access token to the client
     return NextResponse.json({
       access_token: response.access_token,
       token_type: response.token_type,
@@ -43,8 +42,8 @@ export async function POST() {
     })
   } catch (error) {
     // Clear invalid tokens on refresh failure
-    await removeCookie(AUTH_REFRESH_TOKEN_COOKIE)
-    await removeCookie(AUTH_ACCESS_TOKEN_COOKIE)
+    await removeRefreshToken()
+    await removeAccessToken()
 
     // Handle and log error with context
     return handleAPIError(error, {

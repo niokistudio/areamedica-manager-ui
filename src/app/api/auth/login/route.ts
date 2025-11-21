@@ -1,14 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { LoginRequestSchema } from "@/app/api/auth/login/login.schema"
-import {
-  AUTH_ACCESS_TOKEN_COOKIE,
-  AUTH_REFRESH_TOKEN_COOKIE,
-  AUTH_REFRESH_TOKEN_COOKIE_DURATION,
-} from "@/constants/cookies"
 import { ValidationError } from "@/lib/errors/AppError"
 import { handleAPIError } from "@/lib/errors/errorHandler"
+import { setAccessToken, setRefreshToken } from "@/lib/tokens/server"
 import { $login } from "@/services/auth.server"
-import { setCookie } from "@/utils/cookies/server"
 
 /**
  * POST /api/auth/login
@@ -34,12 +29,10 @@ export async function POST(request: NextRequest) {
     const response = await $login(loginRequest)
 
     // Store refresh token in an HTTP-only cookie
-    await setCookie(AUTH_REFRESH_TOKEN_COOKIE, response.refresh_token, {
-      maxAge: AUTH_REFRESH_TOKEN_COOKIE_DURATION,
-    })
+    await setRefreshToken(response.refresh_token)
 
     // Store access token in a cookie for server-side access
-    await setCookie(AUTH_ACCESS_TOKEN_COOKIE, response.access_token, {
+    await setAccessToken(response.access_token, {
       maxAge: response.expires_in,
     })
 
