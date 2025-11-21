@@ -3,7 +3,7 @@ import {
   AUTH_ACCESS_TOKEN_COOKIE,
   AUTH_REFRESH_TOKEN_COOKIE,
 } from "@/constants/cookies"
-import { type APIError, APIErrorCode } from "@/types/api"
+import { handleAPIError } from "@/lib/errors/errorHandler"
 import { removeCookie } from "@/utils/cookies/server"
 
 /**
@@ -19,19 +19,12 @@ export async function POST() {
     await removeCookie(AUTH_ACCESS_TOKEN_COOKIE)
 
     // Return success response
-    return NextResponse.json({
-      message: "Logged out successfully",
-    })
+    return NextResponse.json(null, { status: 203 })
   } catch (error) {
-    console.error("Logout error:", error)
-
-    return NextResponse.json(
-      {
-        message: "An error occurred during logout",
-        code: APIErrorCode.UnknownError,
-        status: 500,
-      } as APIError,
-      { status: 500 },
-    )
+    // Handle and log error with context
+    return handleAPIError(error, {
+      endpoint: "/api/auth/logout",
+      method: "POST",
+    })
   }
 }

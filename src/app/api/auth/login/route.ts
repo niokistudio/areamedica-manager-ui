@@ -5,31 +5,32 @@ import {
   AUTH_REFRESH_TOKEN_COOKIE,
   AUTH_REFRESH_TOKEN_COOKIE_DURATION,
 } from "@/constants/cookies"
+import { ValidationError } from "@/lib/errors/AppError"
+import { handleAPIError } from "@/lib/errors/errorHandler"
 import { $login } from "@/services/auth.server"
-import { type APIError, APIErrorCode } from "@/types/api"
 import { setCookie } from "@/utils/cookies/server"
 
 /**
  * POST /api/auth/login
- * Authenticates user and sets refresh token cookie
+ * Authenticates user and sets authentication cookies
  */
 export async function POST(request: NextRequest) {
   try {
+    // Parse and validate request body
     const body = await request.json()
-    const { data: loginRequest, success } = LoginRequestSchema.safeParse(body)
+    const {
+      data: loginRequest,
+      success,
+      error,
+    } = LoginRequestSchema.safeParse(body)
 
     if (!success) {
-      return NextResponse.json(
-        {
-          message: "Invalid credentials",
-          code: APIErrorCode.InvalidCredentials,
-          status: 400,
-        } as APIError,
-        { status: 400 },
-      )
+      throw new ValidationError("Invalid login credentials format", {
+        validationErrors: error,
+      })
     }
 
-    // Call backend login endpoint
+    // Call backend login service
     const response = await $login(loginRequest)
 
     // Store refresh token in an HTTP-only cookie
@@ -37,27 +38,22 @@ export async function POST(request: NextRequest) {
       maxAge: AUTH_REFRESH_TOKEN_COOKIE_DURATION,
     })
 
-    // Also store access token in cookie for server-side access
+    // Store access token in a cookie for server-side access
     await setCookie(AUTH_ACCESS_TOKEN_COOKIE, response.access_token, {
       maxAge: response.expires_in,
     })
 
-    // Return the access token to the client
+    // Return an access token to a client (for localStorage)
     return NextResponse.json({
       access_token: response.access_token,
       token_type: response.token_type,
       expires_in: response.expires_in,
     })
   } catch (error) {
-    console.error("Login error:", error)
-
-    return NextResponse.json(
-      {
-        message: "An unexpected error occurred during login",
-        code: APIErrorCode.UnknownError,
-        status: 500,
-      } as APIError,
-      { status: 500 },
-    )
+    // Handle and log error with context
+    return handleAPIError(error, {
+      endpoint: "/api/auth/login",
+      method: "POST",
+    })
   }
 }
