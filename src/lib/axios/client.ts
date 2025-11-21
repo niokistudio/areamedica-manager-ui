@@ -4,7 +4,9 @@ import {
   removeAccessToken,
   setAccessToken,
 } from "@/lib/tokens/client"
+import { refreshToken } from "@/services/auth.client"
 import { type APIError, APIErrorCode, type BackendError } from "@/types/api"
+import type { AuthResponse } from "@/types/auth"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api"
 
@@ -55,14 +57,8 @@ axiosClient.interceptors.response.use(
       !originalRequest.headers?.["X-Retry"]
     ) {
       try {
-        // Call refresh endpoint (refresh token sent via HTTP-only cookie)
-        const response = await axios.post<{ accessToken: string }>(
-          `${API_BASE_URL}/auth/refresh`,
-          {},
-          { withCredentials: true },
-        )
-
-        const { accessToken } = response.data
+        // Call refresh API route (refresh token sent via HTTP-only cookie)
+        const { access_token: accessToken } = await refreshToken()
 
         // Store new access token
         setAccessToken(accessToken)

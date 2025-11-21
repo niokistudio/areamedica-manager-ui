@@ -4,9 +4,12 @@ import { Button } from "@heroui/button"
 import { Input } from "@heroui/input"
 import { useTranslations } from "next-intl"
 import { type FormEvent, useState } from "react"
+import { useAuth } from "@/hooks/use-auth"
+import type { APIError } from "@/types/api"
 
 export function LoginForm() {
   const t = useTranslations("Auth.LoginPage")
+  const { login } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
@@ -14,6 +17,7 @@ export function LoginForm() {
   const [errors, setErrors] = useState<{
     email?: string
     password?: string
+    general?: string
   }>({})
 
   const validateForm = (): boolean => {
@@ -43,15 +47,22 @@ export function LoginForm() {
     }
 
     setIsLoading(true)
+    setErrors({}) // Clear previous errors
 
     try {
-      // TODO: Implement actual authentication logic
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      console.log("Login attempt:", { email, password, rememberMe })
-      // After successful login, redirect or update auth state
+      // Call login from AuthProvider
+      await login({ email, password })
+      // Note: AuthProvider handles redirect to /manager/transactions
     } catch (error) {
       console.error("Login error:", error)
-      // Handle error (show toast, error message, etc.)
+
+      // Handle API errors
+      const apiError = error as APIError
+      setErrors({
+        general:
+          apiError.message ||
+          "An error occurred during login. Please try again.",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -86,6 +97,10 @@ export function LoginForm() {
         isDisabled={isLoading}
         variant="underlined"
       />
+
+      {errors.general && (
+        <div className="text-danger text-sm text-center">{errors.general}</div>
+      )}
 
       <Button
         type="submit"
