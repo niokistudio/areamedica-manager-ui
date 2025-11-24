@@ -6,7 +6,6 @@ import {
 } from "@/lib/tokens/client"
 import { refreshToken } from "@/services/auth.client"
 import { type APIError, APIErrorCode, type BackendError } from "@/types/api"
-import type { AuthResponse } from "@/types/auth"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api"
 
