@@ -1,31 +1,31 @@
 import { Chip, type ChipProps } from "@heroui/chip"
 import { cn } from "@heroui/theme"
 import {
+  AlertCircle,
   Ban,
   CheckCircle,
-  Clock,
+  HelpCircle,
   Loader2,
   type LucideIcon,
-  XOctagon,
 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { DefaultTableCell } from "@/components/ui/table-cells/DefaultTableCell"
 import { TransactionStatus } from "@/types/transactions"
 
 export const statusColorMap: Record<TransactionStatus, ChipProps["color"]> = {
-  PENDING: "warning",
   IN_PROGRESS: "primary",
   COMPLETED: "success",
-  FAILED: "danger",
-  CANCELLED: "default",
+  CANCELED: "default",
+  UNKNOWN: "warning",
+  TO_REVIEW: "secondary",
 }
 
 export const statusIconMap: Record<TransactionStatus, LucideIcon> = {
-  PENDING: Clock,
   IN_PROGRESS: Loader2,
   COMPLETED: CheckCircle,
-  FAILED: XOctagon,
-  CANCELLED: Ban,
+  CANCELED: Ban,
+  UNKNOWN: HelpCircle,
+  TO_REVIEW: AlertCircle,
 }
 
 interface TransactionStatusTableCellProps {
@@ -46,13 +46,15 @@ export function TransactionStatusTableCell({
         variant="flat"
         color={colorVariant}
         startContent={
-          <Icon
-            className={cn(
-              "size-4",
-              status === TransactionStatus.IN_PROGRESS &&
-                "animate-spinner-linear-spin",
-            )}
-          />
+          Icon ? (
+            <Icon
+              className={cn(
+                "size-4",
+                status === TransactionStatus.IN_PROGRESS &&
+                  "animate-spinner-linear-spin",
+              )}
+            />
+          ) : null
         }
         className="gap-1"
       >

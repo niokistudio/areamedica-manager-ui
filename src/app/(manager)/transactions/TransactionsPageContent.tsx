@@ -1,30 +1,32 @@
 "use client"
 
 import { Plus } from "lucide-react"
-import { useMemo } from "react"
 import { TransactionsTable } from "@/app/(manager)/transactions/table/TransactionsTable"
 import { TransactionsToolbar } from "@/app/(manager)/transactions/toolbar/TransactionsToolbar"
 import { Button } from "@/components/ui/Button"
-import { mockTransactions } from "@/mocks/transactions"
+import { usePaginationParams } from "@/hooks/use-pagination-params"
+import { useTransactions } from "@/hooks/use-transactions"
 import { useTransactionsStore } from "@/stores/useTransactionsStore"
 
 const ROWS_PER_PAGE = 10
 
 export function TransactionsPageContent() {
+  // Get pagination and filter state from URL params (single source of truth)
+  const { page, search, fromDate, toDate, setPage } = usePaginationParams()
+
+  // Get selection state from store (UI-specific, not in URL)
   const selectedKeys = useTransactionsStore((state) => state.selectedKeys)
-  const page = useTransactionsStore((state) => state.page)
   const setSelectedKeys = useTransactionsStore((state) => state.setSelectedKeys)
-  const setPage = useTransactionsStore((state) => state.setPage)
 
-  // Calculate pagination
-  const totalPages = Math.ceil(mockTransactions.length / ROWS_PER_PAGE)
-
-  // Get paginated items
-  const paginatedTransactions = useMemo(() => {
-    const start = (page - 1) * ROWS_PER_PAGE
-    const end = start + ROWS_PER_PAGE
-    return mockTransactions.slice(start, end)
-  }, [page])
+  // Fetch transactions from API
+  const { transactions, totalPages, isLoading, error, isEmpty } =
+    useTransactions({
+      page,
+      limit: ROWS_PER_PAGE,
+      search,
+      fromDate,
+      toDate,
+    })
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
@@ -46,14 +48,24 @@ export function TransactionsPageContent() {
       </div>
       <div className="flex flex-col gap-8">
         <TransactionsToolbar />
-        <TransactionsTable
-          transactions={paginatedTransactions}
-          page={page}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-          selectedKeys={selectedKeys}
-          onSelectionChange={handleSelectionChange}
-        />
+        {error ? (
+          <div className="text-center">
+            <p className="text-danger text-lg font-semibold mb-2">
+              Error al cargar transacciones
+            </p>
+            <p className="text-default-500">{error.message}</p>
+          </div>
+        ) : (
+          <TransactionsTable
+            transactions={transactions}
+            isLoading={isLoading}
+            page={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            selectedKeys={selectedKeys}
+            onSelectionChange={handleSelectionChange}
+          />
+        )}
       </div>
     </div>
   )

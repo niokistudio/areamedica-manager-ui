@@ -37,16 +37,19 @@
   "ITransactions": {
     "TransactionType": {
       "TRANSACTION": "Transacción",
-      "PAYMENT": "Pago",
-      "TRANSFER": "Transferencia",
-      "REFUND": "Reembolso"
+      "COMMISSION": "Comisión",
+      "OTHER": "Otro"
     },
     "TransactionStatus": {
-      "PENDING": "Pendiente",
       "IN_PROGRESS": "En progreso",
       "COMPLETED": "Completada",
-      "FAILED": "Fallida",
-      "CANCELLED": "Cancelada"
+      "CANCELED": "Cancelada",
+      "UNKNOWN": "Desconocida",
+      "TO_REVIEW": "Por revisar"
+    },
+    "BankType": {
+      "BANESCO": "Banesco",
+      "MOBILE_TRANSFER": "Pago Móvil"
     }
   }
 }

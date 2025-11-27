@@ -40,8 +40,8 @@ export interface APIError {
   code: APIErrorCode
 }
 export interface PaginatedResponse<T> {
-  items: T[]
+  transactions: T[]
   total: number
-  skip: number
+  offset: number
   limit: number
 }

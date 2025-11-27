@@ -1,23 +1,28 @@
 export enum TransactionStatus {
-  PENDING = "PENDING",
   IN_PROGRESS = "IN_PROGRESS",
   COMPLETED = "COMPLETED",
-  FAILED = "FAILED",
-  CANCELLED = "CANCELLED",
+  CANCELED = "CANCELED",
+  UNKNOWN = "UNKNOWN",
+  TO_REVIEW = "TO_REVIEW",
 }
 
 export enum TransactionType {
   TRANSACTION = "TRANSACTION",
-  PAYMENT = "PAYMENT",
-  TRANSFER = "TRANSFER",
-  REFUND = "REFUND",
+  COMMISSION = "COMMISSION",
+  OTHER = "OTHER",
+}
+
+// Puede ser banesco o pagomovil, usar esto para discriminar el tipo de de formulario que se debe usar
+export enum BankType {
+  BANESCO = "BANESCO",
+  MOBILE_TRANSFER = "MOBILE_TRANSFER",
 }
 
 export interface Transaction {
   id: string
   transaction_id: string
   reference: string
-  bank: string
+  bank: BankType
   transaction_type: TransactionType
   status: TransactionStatus
   amount: number

@@ -9,4 +9,5 @@ export const apiRoutes = {
   login: "/auth/login",
   logout: "/auth/logout",
   refresh: "/auth/refresh",
+  transactions: "/transactions",
 } as const

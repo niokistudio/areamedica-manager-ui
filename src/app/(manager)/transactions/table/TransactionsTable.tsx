@@ -2,7 +2,6 @@
 
 import { Pagination } from "@heroui/pagination"
 import {
-  Table,
   TableBody,
   TableCell,
   TableColumn,
@@ -10,8 +9,15 @@ import {
   TableRow,
 } from "@heroui/table"
 import type { Key } from "@react-types/shared"
+import dynamic from "next/dynamic"
+import { useTransactionsStore } from "@/stores/useTransactionsStore"
 import type { Transaction } from "@/types/transactions"
 import { useTransactionsColumns } from "./useTransactionsColumns"
+
+//  Dynamically import table to avoid hydration mismatches
+const Table = dynamic(() => import("@heroui/table").then((m) => m.Table), {
+  ssr: false,
+})
 
 interface TransactionsTableProps {
   transactions: Transaction[]
@@ -27,25 +33,24 @@ interface TransactionsTableProps {
 
 export function TransactionsTable({
   transactions,
-  isLoading = false,
+  isLoading = true,
   page,
   totalPages,
   onPageChange,
-  selectedKeys,
-  onSelectionChange,
 }: TransactionsTableProps) {
   const { columns, renderCell } = useTransactionsColumns()
+  const { selectedKeys, setSelectedKeys } = useTransactionsStore()
 
   return (
     <div className="flex flex-col gap-6">
       <Table
         aria-label="Transactions table"
-        selectionMode="multiple"
-        selectedKeys={selectedKeys}
-        onSelectionChange={onSelectionChange}
         classNames={{
           wrapper: "min-h-[400px]",
         }}
+        selectionMode="multiple"
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
       >
         <TableHeader columns={columns}>
           {(column) => (
@@ -75,7 +80,7 @@ export function TransactionsTable({
         </TableBody>
       </Table>
 
-      {totalPages > 0 && (
+      {totalPages > 1 && (
         <div className="flex w-full justify-center">
           <Pagination
             showControls
