@@ -21,6 +21,14 @@
     }
   },
   "TransactionsPage": {
+    "list": {
+      "title": "Listado de transacciones",
+      "newButton": "Nueva Consulta"
+    },
+    "new": {
+      "title": "Consultar Transacción",
+      "backButton": "Volver"
+    },
     "table": {
       "column": {
         "status": "Estado",
