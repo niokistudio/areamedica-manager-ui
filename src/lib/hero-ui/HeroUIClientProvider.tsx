@@ -10,5 +10,9 @@ interface HeroUIClientProviderProps {
 export default function HeroUIClientProvider({
   children,
 }: HeroUIClientProviderProps) {
-  return <HeroUIProvider className="h-full">{children}</HeroUIProvider>
+  return (
+    <HeroUIProvider validationBehavior="aria" className="h-full">
+      {children}
+    </HeroUIProvider>
+  )
 }

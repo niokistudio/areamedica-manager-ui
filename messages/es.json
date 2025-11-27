@@ -27,7 +27,20 @@
     },
     "new": {
       "title": "Consultar Transacción",
-      "backButton": "Volver"
+      "backButton": "Volver",
+      "card": {
+        "label": "Formulario de consulta",
+        "description": "Complete los datos para consultar una transacción"
+      },
+      "form": {
+        "bank": "Tipo de operación",
+        "reference": "Número de referencia",
+        "name": "Nombre",
+        "phone": "Teléfono",
+        "documentPrefix": "Tipo de documento",
+        "documentNumber": "Número de documento",
+        "submit": "Consultar"
+      }
     },
     "table": {
       "column": {
@@ -41,6 +54,13 @@
         "type": "Tipo"
       }
     }
+  },
+  "SchemaValidations": {
+    "required": "Campo obligatorio",
+    "numericOnly": "Solo debe contener números",
+    "documentMinLength": "El documento debe tener al menos 5 dígitos",
+    "documentMaxLength": "El documento no debe exceder los 10 dígitos",
+    "invalidSelection": "Selección inválida"
   },
   "ITransactions": {
     "TransactionType": {
@@ -56,8 +76,14 @@
       "TO_REVIEW": "Por revisar"
     },
     "BankType": {
-      "BANESCO": "Banesco",
+      "BANESCO": "Transferencia Banesco",
       "MOBILE_TRANSFER": "Pago Móvil"
+    },
+    "DocumentPrefix": {
+      "V": "V - Venezolano",
+      "E": "E - Extranjero",
+      "J": "J - Persona Jurídica",
+      "G": "G - Gubernamental"
     }
   }
 }
