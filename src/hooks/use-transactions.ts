@@ -87,7 +87,7 @@ export function useTransactions(
   })
 
   // Calculate derived values
-  const transactions = data?.transactions ?? []
+  const transactions = data?.items ?? []
   const total = data?.total ?? 0
   const totalPages = limit > 0 ? Math.ceil(total / limit) : 0
   const isEmpty = !isLoading && transactions.length === 0
