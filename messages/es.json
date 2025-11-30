@@ -56,6 +56,13 @@
         "date": "Fecha",
         "amount": "Monto",
         "type": "Tipo"
+      },
+      "actions": {
+        "menu": "Menú de acciones",
+        "openDetails": "Ver detalles",
+        "download": "Descargar comprobante",
+        "edit": "Editar",
+        "delete": "Eliminar"
       }
     },
     "detail": {

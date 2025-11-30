@@ -38,7 +38,9 @@ const columnRenderers: Partial<
   type: (transaction) => (
     <TransactionTypeTableCell type={transaction.transaction_type} />
   ),
-  actions: () => <TransactionActionsTableCell />,
+  actions: (transaction) => (
+    <TransactionActionsTableCell transaction={transaction} />
+  ),
   name: "customer_full_name",
   phone: "customer_phone",
 }
