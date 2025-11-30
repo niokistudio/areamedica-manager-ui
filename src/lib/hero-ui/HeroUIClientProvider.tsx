@@ -1,6 +1,7 @@
 "use client"
 
 import { HeroUIProvider } from "@heroui/system"
+import { ToastProvider } from "@heroui/toast"
 import type { ReactNode } from "react"
 
 interface HeroUIClientProviderProps {
@@ -13,6 +14,7 @@ export default function HeroUIClientProvider({
   return (
     <HeroUIProvider validationBehavior="aria" className="h-full">
       {children}
+      <ToastProvider placement="top-right" />
     </HeroUIProvider>
   )
 }

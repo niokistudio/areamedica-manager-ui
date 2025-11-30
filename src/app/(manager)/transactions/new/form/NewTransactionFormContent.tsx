@@ -6,7 +6,13 @@ import { TransactionPhoneField } from "@/app/(manager)/transactions/new/form/fie
 import { TransactionReferenceField } from "@/app/(manager)/transactions/new/form/fields/TransactionReferenceField"
 import { Button } from "@/components/ui/Button"
 
-export function NewTransactionFormContent() {
+interface NewTransactionFormContentProps {
+  isLoading: boolean
+}
+
+export function NewTransactionFormContent({
+  isLoading,
+}: NewTransactionFormContentProps) {
   const t = useTranslations("TransactionsPage.new.form")
 
   return (
@@ -18,8 +24,13 @@ export function NewTransactionFormContent() {
         <TransactionDocumentField />
         <TransactionPhoneField />
       </div>
-      <Button color="primary" type="submit" className="self-center">
-        {t("submit")}
+      <Button
+        color="primary"
+        type="submit"
+        className="self-center"
+        isLoading={isLoading}
+      >
+        {isLoading ? t("submitting") : t("submit")}
       </Button>
     </div>
   )

@@ -38,8 +38,12 @@
         "name": "Nombre",
         "phone": "Teléfono",
         "documentPrefix": "Tipo de documento",
+        "documentPrefixLabel": "Seleccionar tipo de documento",
         "documentNumber": "Número de documento",
-        "submit": "Consultar"
+        "submit": "Consultar",
+        "submitting": "Consultando...",
+        "success": "Transacción consultada exitosamente",
+        "error": "Error al consultar la transacción"
       }
     },
     "table": {

@@ -21,6 +21,7 @@ export function TransactionDocumentField() {
   return (
     <div className="flex items-start gap-2">
       <SelectFormField
+        aria-label={t("TransactionsPage.new.form.documentPrefixLabel")}
         name="documentPrefix"
         control={control}
         options={options}

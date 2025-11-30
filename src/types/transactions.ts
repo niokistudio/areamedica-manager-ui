@@ -37,19 +37,15 @@ export interface Transaction {
 }
 
 export interface CreateTransactionRequest {
-  transaction_id: string
-  reference: string
   bank: string
-  transaction_type?: TransactionType
-  status?: TransactionStatus
+  reference: string
   customer_full_name?: string
-  customer_phone?: string
   customer_national_id?: string
-  concept?: string
-  extra_data?: Record<string, unknown>
+  customer_phone?: string
 }
 
 export interface UpdateTransactionRequest {
+  transaction_id: string
   status?: TransactionStatus
   customer_full_name?: string
   customer_phone?: string
