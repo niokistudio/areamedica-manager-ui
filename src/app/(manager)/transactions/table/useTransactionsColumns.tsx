@@ -9,6 +9,7 @@ import { CurrencyTableCell } from "@/components/ui/table-cells/CurrencyTableCell
 import { DateTableCell } from "@/components/ui/table-cells/DateTableCell"
 import { DefaultTableCell } from "@/components/ui/table-cells/DefaultTableCell"
 import type { Transaction } from "@/types/transactions"
+import { formatDocument } from "@/utils/numbers"
 import type {
   TransactionColumn,
   TransactionColumnKey,
@@ -27,7 +28,11 @@ const columnRenderers: Partial<
   status: (transaction) => (
     <TransactionStatusTableCell status={transaction.status} />
   ),
-  nationalId: "customer_national_id",
+  nationalId: (transaction) => (
+    <DefaultTableCell>
+      {formatDocument(transaction.customer_national_id) || "-"}
+    </DefaultTableCell>
+  ),
   date: (transaction) => <DateTableCell value={transaction.created_at} />,
   amount: (transaction) => <CurrencyTableCell value={transaction.amount} />,
   type: (transaction) => (

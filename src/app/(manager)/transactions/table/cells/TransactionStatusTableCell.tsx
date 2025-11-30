@@ -1,32 +1,9 @@
-import { Chip, type ChipProps } from "@heroui/chip"
+import { Chip } from "@heroui/chip"
 import { cn } from "@heroui/theme"
-import {
-  AlertCircle,
-  Ban,
-  CheckCircle,
-  HelpCircle,
-  Loader2,
-  type LucideIcon,
-} from "lucide-react"
 import { useTranslations } from "next-intl"
 import { DefaultTableCell } from "@/components/ui/table-cells/DefaultTableCell"
+import { statusColorMap, statusIconMap } from "@/constants/transactions"
 import { TransactionStatus } from "@/types/transactions"
-
-export const statusColorMap: Record<TransactionStatus, ChipProps["color"]> = {
-  IN_PROGRESS: "primary",
-  COMPLETED: "success",
-  CANCELED: "default",
-  UNKNOWN: "warning",
-  TO_REVIEW: "secondary",
-}
-
-export const statusIconMap: Record<TransactionStatus, LucideIcon> = {
-  IN_PROGRESS: Loader2,
-  COMPLETED: CheckCircle,
-  CANCELED: Ban,
-  UNKNOWN: HelpCircle,
-  TO_REVIEW: AlertCircle,
-}
 
 interface TransactionStatusTableCellProps {
   status: TransactionStatus

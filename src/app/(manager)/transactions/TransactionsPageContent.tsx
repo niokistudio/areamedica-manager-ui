@@ -22,14 +22,13 @@ export function TransactionsPageContent() {
   const setSelectedKeys = useTransactionsStore((state) => state.setSelectedKeys)
 
   // Fetch transactions from API
-  const { transactions, totalPages, isLoading, error, isEmpty } =
-    useTransactions({
-      page,
-      limit: ROWS_PER_PAGE,
-      search,
-      fromDate,
-      toDate,
-    })
+  const { transactions, totalPages, isLoading, error } = useTransactions({
+    page,
+    limit: ROWS_PER_PAGE,
+    search,
+    fromDate,
+    toDate,
+  })
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
