@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardBody } from "@heroui/card"
-import { AlertCircle, ArrowLeft, RefreshCw } from "lucide-react"
+import { AlertCircle, ArrowLeft, FileX, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { useTranslations } from "next-intl"
 import { TransactionCustomerInfo } from "@/app/(manager)/transactions/[id]/components/TransactionCustomerInfo"
@@ -50,28 +50,21 @@ export function TransactionDetailsPageContent({
       )}
 
       {/* Error State */}
-      {error && !isLoading && (
+      {error && error.status !== 404 && !isLoading && (
         <div className="flex flex-col items-center text-center gap-2">
           <AlertCircle className="size-10 text-danger" />
           <h2 className="text-xl font-semibold text-danger">{t("error")}</h2>
-          <p className="text-muted-foreground">
-            {error?.message || t("errorDescription")}
-          </p>
+          <p className="text-muted-foreground">{t("errorDescription")}</p>
         </div>
       )}
 
       {/* Not Found State */}
-      {!isLoading && !error && !transaction && (
-        <Card className="max-w-6xl w-full mx-auto">
-          <CardBody className="p-6">
-            <div className="text-center">
-              <h2 className="text-xl font-semibold mb-2">{t("notFound")}</h2>
-              <p className="text-muted-foreground">
-                {t("notFoundDescription")}
-              </p>
-            </div>
-          </CardBody>
-        </Card>
+      {!isLoading && ((!error && !transaction) || error?.status === 404) && (
+        <div className="flex flex-col items-center text-center gap-2">
+          <FileX className="size-10 text-primary" />
+          <h2 className="text-xl font-semibold">{t("notFound")}</h2>
+          <p className="text-muted-foreground">{t("notFoundDescription")}</p>
+        </div>
       )}
 
       {/* Transaction Details */}
