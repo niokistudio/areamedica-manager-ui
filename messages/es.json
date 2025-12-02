@@ -62,7 +62,11 @@
         "openDetails": "Ver detalles",
         "download": "Descargar comprobante",
         "edit": "Editar",
-        "delete": "Eliminar"
+        "delete": "Eliminar",
+        "deleteConfirmTitle": "Eliminar transacción",
+        "deleteConfirmDescription": "¿Estás seguro de que deseas eliminar esta transacción? Esta acción no se puede deshacer.",
+        "deleteSuccess": "Transacción eliminada exitosamente",
+        "deleteError": "Error al eliminar la transacción"
       }
     },
     "detail": {

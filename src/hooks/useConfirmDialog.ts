@@ -1,4 +1,5 @@
 import { useCallback } from "react"
+import { ConfirmationError } from "@/errors/ConfirmationError"
 import { useConfirmDialogStore } from "@/stores/useConfirmDialogStore"
 import type { ConfirmDialogOptions } from "@/types/confirm-dialog"
 
@@ -35,8 +36,8 @@ export function useConfirmDialog() {
     async (options: ConfirmDialogOptions): Promise<boolean> => {
       const result = await openDialog(options)
       if (!result) {
-        // Reject the promise if user cancelled
-        throw new Error("User cancelled")
+        // Reject the promise if the user canceled
+        throw new ConfirmationError("User canceled")
       }
       return result
     },
