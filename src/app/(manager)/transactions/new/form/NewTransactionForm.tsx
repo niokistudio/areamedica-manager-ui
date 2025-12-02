@@ -3,7 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useCallback, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { mapNewTransactionFormToServer } from "@/app/(manager)/transactions/new/form/NewTransactionForm.utils"
+import {
+  mapNewTransactionFormToServer,
+  mapServerToNewTransactionForm,
+} from "@/app/(manager)/transactions/new/form/NewTransactionForm.utils"
 import { NewTransactionFormContent } from "@/app/(manager)/transactions/new/form/NewTransactionFormContent"
 import {
   type INewTransactionForm,
@@ -13,14 +16,21 @@ import {
 import { apiRoutes } from "@/constants/api-routes"
 import { axiosClient } from "@/lib/axios/client"
 import type { APIError } from "@/types/api"
+import type { Transaction } from "@/types/transactions"
 
-export function NewTransactionForm() {
+interface NewTransactionFormProps {
+  transaction?: Transaction
+}
+
+export function NewTransactionForm({ transaction }: NewTransactionFormProps) {
   const t = useTranslations("TransactionsPage.new.form")
   const schema = useNewTransactionFormSchema()
   const [isLoading, setIsLoading] = useState(false)
 
   const { handleSubmit, ...methods } = useForm({
-    defaultValues: newTransactionFormDefaultValues,
+    defaultValues: transaction
+      ? mapServerToNewTransactionForm(transaction)
+      : newTransactionFormDefaultValues,
     resolver: zodResolver(schema),
   })
 
@@ -30,7 +40,7 @@ export function NewTransactionForm() {
       try {
         const response = await axiosClient.post(
           apiRoutes.transactions,
-          mapNewTransactionFormToServer(form),
+          mapNewTransactionFormToServer(form, transaction),
         )
         addToast({
           title: t("success"),
@@ -48,7 +58,7 @@ export function NewTransactionForm() {
         setIsLoading(false)
       }
     },
-    [t],
+    [t, transaction],
   )
 
   return (
