@@ -125,5 +125,9 @@
       "J": "J - Persona Jurídica",
       "G": "G - Gubernamental"
     }
+  },
+  "ConfirmDialog": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar"
   }
 }

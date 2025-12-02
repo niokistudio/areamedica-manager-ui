@@ -1,5 +1,6 @@
 import { NextIntlClientProvider } from "next-intl"
 import type { ReactNode } from "react"
+import { ConfirmDialog } from "@/components/ConfirmDialog"
 import HeroUIClientProvider from "@/lib/hero-ui/HeroUIClientProvider"
 import { SWRClientProvider } from "@/lib/swr/SWRClientProvider"
 import { AuthProvider } from "@/providers/AuthProvider"
@@ -13,7 +14,10 @@ export default function GlobalProvider({ children }: GlobalProviderProps) {
     <NextIntlClientProvider>
       <HeroUIClientProvider>
         <SWRClientProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            {children}
+            <ConfirmDialog />
+          </AuthProvider>
         </SWRClientProvider>
       </HeroUIClientProvider>
     </NextIntlClientProvider>
