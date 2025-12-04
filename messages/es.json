@@ -33,6 +33,8 @@
         "description": "Complete los datos para consultar una transacción"
       },
       "form": {
+        "customerSection": "Información del Cliente",
+        "transactionSection": "Información de la Transacción",
         "bank": "Tipo de operación",
         "reference": "Número de referencia",
         "name": "Nombre",
@@ -146,5 +148,23 @@
   "ConfirmDialog": {
     "confirm": "Confirmar",
     "cancel": "Cancelar"
+  },
+  "TransactionReceipt": {
+    "modal": {
+      "title": "Vista Previa del Comprobante",
+      "print": "Imprimir",
+      "cancel": "Cancelar"
+    },
+    "receipt": {
+      "title": "Comprobante de Transacción",
+      "amount": "Monto",
+      "status": "Estado",
+      "details": "Detalles de la Transacción",
+      "customer": "Información del Cliente",
+      "footer": {
+        "generated": "Generado el",
+        "disclaimer": "Este comprobante es válido como constancia de transacción"
+      }
+    }
   }
 }

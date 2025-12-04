@@ -69,3 +69,47 @@ body {
 .animation-delay-400 {
   animation-delay: 0.4s;
 }
+
+/* Transaction Receipt Print Styles */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 15mm;
+  }
+
+  /* Hide everything by default */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Show only receipt */
+  .receipt-print-root,
+  .receipt-print-root * {
+    visibility: visible !important;
+  }
+
+  /* Position receipt */
+  .receipt-print-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  /* Prevent page breaks in sections */
+  .receipt-print-section {
+    page-break-inside: avoid;
+  }
+
+  /* Force colors in print */
+  .receipt-print-color {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* White background */
+  body {
+    background: white !important;
+  }
+}

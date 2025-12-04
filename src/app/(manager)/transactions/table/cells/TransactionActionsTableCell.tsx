@@ -15,6 +15,7 @@ import { apiRoutes } from "@/constants/api-routes"
 import { routes } from "@/constants/routes"
 import { ConfirmationError } from "@/errors/ConfirmationError"
 import { useConfirmDialog } from "@/hooks/useConfirmDialog"
+import { useReceiptPrint } from "@/hooks/useReceiptPrint"
 import { deleteTransaction } from "@/services/transactions.client"
 import { type Transaction, TransactionStatus } from "@/types/transactions"
 
@@ -28,6 +29,7 @@ export function TransactionActionsTableCell({
   const t = useTranslations("TransactionsPage.table.actions")
   const router = useRouter()
   const { confirm } = useConfirmDialog()
+  const { openReceiptModal } = useReceiptPrint()
   const [isDeleting, setIsDeleting] = useState(false)
 
   const detailsUrl = useMemo(
@@ -75,7 +77,9 @@ export function TransactionActionsTableCell({
     }
   }, [transaction.id, confirm, t])
 
-  const handleDownload = useCallback(async () => {}, [])
+  const handleDownload = useCallback(() => {
+    openReceiptModal(transaction)
+  }, [transaction, openReceiptModal])
 
   const handleEdit = useCallback(() => {
     router.push(editUrl)
