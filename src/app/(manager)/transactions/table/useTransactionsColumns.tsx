@@ -9,7 +9,7 @@ import { CurrencyTableCell } from "@/components/ui/table-cells/CurrencyTableCell
 import { DateTableCell } from "@/components/ui/table-cells/DateTableCell"
 import { DefaultTableCell } from "@/components/ui/table-cells/DefaultTableCell"
 import type { Transaction } from "@/types/transactions"
-import { formatDocument } from "@/utils/numbers"
+import { formatDocument } from "@/utils/document"
 import type {
   TransactionColumn,
   TransactionColumnKey,
@@ -29,15 +29,15 @@ const columnRenderers: Partial<
     <TransactionStatusTableCell status={transaction.status} />
   ),
   nationalId: (transaction) => (
-    <DefaultTableCell>
-      {formatDocument(transaction.customer_national_id) || "-"}
+    <DefaultTableCell className="break-keep text-nowrap">
+      {formatDocument(transaction.customer_document) || "-"}
     </DefaultTableCell>
   ),
   date: (transaction) => <DateTableCell value={transaction.created_at} />,
-  amount: (transaction) => <CurrencyTableCell value={transaction.amount} />,
-  type: (transaction) => (
-    <TransactionTypeTableCell type={transaction.transaction_type} />
+  amount: (transaction) => (
+    <CurrencyTableCell value={transaction.details?.amount || 0} />
   ),
+  type: (transaction) => <TransactionTypeTableCell type={transaction.type} />,
   actions: (transaction) => (
     <TransactionActionsTableCell transaction={transaction} />
   ),
@@ -56,9 +56,9 @@ export function useTransactionsColumns() {
     () => [
       { key: "name", label: t("column.name"), sortable: true },
       { key: "nationalId", label: t("column.nationalId"), sortable: true },
+      { key: "phone", label: t("column.phone"), sortable: false },
       { key: "status", label: t("column.status"), sortable: true },
       { key: "reference", label: t("column.reference"), sortable: true },
-      { key: "phone", label: t("column.phone"), sortable: false },
       { key: "date", label: t("column.date"), sortable: true },
       { key: "amount", label: t("column.amount"), sortable: true },
       { key: "type", label: t("column.type"), sortable: true },

@@ -4,7 +4,8 @@ import Logo from "@/assets/logo/logo-areamedica.svg"
 import { statusColorMap, statusIconMap } from "@/constants/transactions"
 import type { Transaction } from "@/types/transactions"
 import { formatDate } from "@/utils/dates"
-import { formatCurrency, formatDocument } from "@/utils/numbers"
+import { formatDocument } from "@/utils/document"
+import { formatCurrency } from "@/utils/numbers"
 
 interface TransactionReceiptPrintProps {
   transaction: Transaction
@@ -17,7 +18,6 @@ export function TransactionReceiptPrint({
   const tCustomer = useTranslations("TransactionsPage.detail.customer")
   const tInfo = useTranslations("TransactionsPage.detail.info")
   const tStatus = useTranslations("ITransactions.TransactionStatus")
-  const tBank = useTranslations("ITransactions.BankType")
   const tType = useTranslations("ITransactions.TransactionType")
 
   const StatusIcon = statusIconMap[transaction.status]
@@ -39,9 +39,11 @@ export function TransactionReceiptPrint({
         <p className="text-sm text-muted-foreground mb-2">
           {tReceipt("amount")}
         </p>
-        <p className="text-5xl font-bold text-foreground mb-4">
-          {formatCurrency(transaction.amount)}
-        </p>
+        {transaction.details?.amount && (
+          <p className="text-5xl font-bold text-foreground mb-4">
+            {formatCurrency(transaction.details?.amount)}
+          </p>
+        )}
         <div className="flex justify-center">
           <Chip
             color={statusColorMap[transaction.status]}
@@ -75,7 +77,7 @@ export function TransactionReceiptPrint({
               {tCustomer("nationalId")}
             </p>
             <p className="text-base font-medium text-foreground">
-              {formatDocument(transaction.customer_national_id)}
+              {formatDocument(transaction.customer_document)}
             </p>
           </div>
           <div>
@@ -104,43 +106,33 @@ export function TransactionReceiptPrint({
             </p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground mb-1">ID</p>
-            <p className="text-base font-medium text-foreground">
-              {transaction.transaction_id}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">
-              {tInfo("bank")}
-            </p>
-            <p className="text-base font-medium text-foreground">
-              {tBank(transaction.bank)}
-            </p>
-          </div>
-          <div>
             <p className="text-sm text-muted-foreground mb-1">
               {tInfo("type")}
             </p>
             <p className="text-base font-medium text-foreground">
-              {tType(transaction.transaction_type)}
+              {tType(transaction.type)}
             </p>
           </div>
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">
-              {tInfo("concept")}
-            </p>
-            <p className="text-base font-medium text-foreground">
-              {transaction.concept}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">
-              {tInfo("createdAt")}
-            </p>
-            <p className="text-base font-medium text-foreground">
-              {formatDate(transaction.created_at)}
-            </p>
-          </div>
+          {transaction.details?.trnDate && (
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">
+                {tInfo("createdAt")}
+              </p>
+              <p className="text-base font-medium text-foreground">
+                {formatDate(transaction.details.trnDate)}
+              </p>
+            </div>
+          )}
+          {transaction.details?.concept && (
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">
+                {tInfo("concept")}
+              </p>
+              <p className="text-base font-medium text-foreground">
+                {transaction.details.concept}
+              </p>
+            </div>
+          )}
         </div>
       </div>
 

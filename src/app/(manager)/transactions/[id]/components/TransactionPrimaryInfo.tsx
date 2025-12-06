@@ -24,9 +24,11 @@ export function TransactionPrimaryInfo({
   return (
     <div className="flex flex-col justify-center items-center gap-6">
       {/* Amount - Large and prominent */}
-      <p className="text-4xl font-bold ">
-        {formatCurrency(transaction.amount)}
-      </p>
+      {transaction.details?.amount && (
+        <p className="text-4xl font-bold">
+          {formatCurrency(transaction.details?.amount)}
+        </p>
+      )}
 
       {/* Status - Chip badge */}
       <Card shadow="sm">

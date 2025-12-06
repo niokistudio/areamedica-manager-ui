@@ -1,8 +1,8 @@
 import { useTranslations } from "next-intl"
 import { useMemo } from "react"
 import z from "zod"
-import { DocumentPrefix } from "@/app/(manager)/transactions/new/form/NewTransactionForm.types"
-import { BankType } from "@/types/transactions"
+import { DocumentPrefix } from "@/types/document"
+import { TransactionType } from "@/types/transactions"
 
 export function useNewTransactionFormSchema() {
   const t = useTranslations("SchemaValidations")
@@ -10,8 +10,6 @@ export function useNewTransactionFormSchema() {
   return useMemo(
     () =>
       z.object({
-        bank: z.enum(BankType, t("invalidSelection")),
-        reference: z.string().trim().min(1, t("required")),
         name: z.string().trim().min(1, t("required")),
         phone: z.string().trim().min(1, t("required")),
         documentPrefix: z.enum(DocumentPrefix, t("invalidSelection")),
@@ -21,6 +19,8 @@ export function useNewTransactionFormSchema() {
           .min(5, t("documentMinLength"))
           .max(10, t("documentMaxLength"))
           .regex(/^[0-9]+$/, t("numericOnly")),
+        type: z.enum(TransactionType, t("invalidSelection")),
+        reference: z.string().trim().min(1, t("required")),
       }),
     [t],
   )
@@ -31,10 +31,10 @@ export type INewTransactionForm = z.infer<
 >
 
 export const newTransactionFormDefaultValues: INewTransactionForm = {
-  bank: BankType.BANESCO,
-  reference: "",
   name: "",
   phone: "",
   documentPrefix: DocumentPrefix.Venezuelan,
   documentNumber: "",
+  type: TransactionType.MobilePayment,
+  reference: "",
 }

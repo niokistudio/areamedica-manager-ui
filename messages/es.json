@@ -111,7 +111,9 @@
       "actions": {
         "update": "Actualizar",
         "download": "Descargar"
-      }
+      },
+      "refreshSuccess": "Transacción actualizada exitosamente",
+      "refreshError": "Error al actualizar la transacción"
     }
   },
   "SchemaValidations": {
@@ -123,9 +125,10 @@
   },
   "ITransactions": {
     "TransactionType": {
-      "TRANSACTION": "Transacción",
-      "COMMISSION": "Comisión",
-      "OTHER": "Otro"
+      "BANESCO": "Transferencia",
+      "TRANSFER": "Transferencia",
+      "MOBILE_TRANSFER": "Pago Móvil",
+      "MOBILE_PAYMENT": "Pago Móvil"
     },
     "TransactionStatus": {
       "IN_PROGRESS": "En progreso",
@@ -133,10 +136,6 @@
       "CANCELED": "Cancelada",
       "UNKNOWN": "Desconocida",
       "TO_REVIEW": "Por revisar"
-    },
-    "BankType": {
-      "BANESCO": "Transferencia Banesco",
-      "MOBILE_TRANSFER": "Pago Móvil"
     },
     "DocumentPrefix": {
       "V": "V - Venezolano",

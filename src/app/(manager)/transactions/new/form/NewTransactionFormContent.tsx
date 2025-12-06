@@ -16,14 +16,30 @@ export function NewTransactionFormContent({
   const t = useTranslations("TransactionsPage.new.form")
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <TransactionBankField />
-        <TransactionReferenceField />
-        <TransactionNameField />
-        <TransactionDocumentField />
-        <TransactionPhoneField />
+    <div className="flex flex-col gap-8">
+      {/* Customer Information Section */}
+      <div className="flex flex-col gap-4">
+        <h3 className="text-lg font-semibold text-foreground">
+          {t("customerSection")}
+        </h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <TransactionNameField />
+          <TransactionDocumentField />
+          <TransactionPhoneField />
+        </div>
       </div>
+
+      {/* Transaction Information Section */}
+      <div className="flex flex-col gap-4">
+        <h3 className="text-lg font-semibold text-foreground">
+          {t("transactionSection")}
+        </h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <TransactionBankField />
+          <TransactionReferenceField />
+        </div>
+      </div>
+
       <Button
         color="primary"
         type="submit"

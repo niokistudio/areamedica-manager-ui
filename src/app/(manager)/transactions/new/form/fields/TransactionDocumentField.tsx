@@ -1,10 +1,10 @@
 import { useTranslations } from "next-intl"
 import { useMemo } from "react"
 import { useFormContext } from "react-hook-form"
-import { DocumentPrefix } from "@/app/(manager)/transactions/new/form/NewTransactionForm.types"
 import type { INewTransactionForm } from "@/app/(manager)/transactions/new/form/use-new-transaction-form-schema"
 import { SelectFormField } from "@/components/ui/form/SelectFormField"
 import { TextFormField } from "@/components/ui/form/TextFormField"
+import { DocumentPrefix } from "@/types/document"
 
 export function TransactionDocumentField() {
   const t = useTranslations()

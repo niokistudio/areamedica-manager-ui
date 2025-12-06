@@ -17,10 +17,10 @@ import { ConfirmationError } from "@/errors/ConfirmationError"
 import { useConfirmDialog } from "@/hooks/useConfirmDialog"
 import { useReceiptPrint } from "@/hooks/useReceiptPrint"
 import { deleteTransaction } from "@/services/transactions.client"
-import { type Transaction, TransactionStatus } from "@/types/transactions"
+import { type ITransaction, TransactionStatus } from "@/types/transactions"
 
 interface TransactionActionsTableCellProps {
-  transaction: Transaction
+  transaction: ITransaction
 }
 
 export function TransactionActionsTableCell({
@@ -111,7 +111,7 @@ export function TransactionActionsTableCell({
         >
           {t("edit")}
         </DropdownItem>
-        {transaction.status === TransactionStatus.COMPLETED ? (
+        {transaction.status === TransactionStatus.Completed ? (
           <DropdownItem
             key="download"
             startContent={<Download className="size-4" />}

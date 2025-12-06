@@ -14,7 +14,6 @@ export function TransactionDetailsInfo({
   transaction,
 }: TransactionDetailsInfoProps) {
   const t = useTranslations("TransactionsPage.detail")
-  const tBank = useTranslations("ITransactions.BankType")
   const tType = useTranslations("ITransactions.TransactionType")
   const { openReceiptModal } = useReceiptPrint()
 
@@ -26,7 +25,7 @@ export function TransactionDetailsInfo({
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-4">
         <h2 className="text-lg font-semibold">{t("info.title")}</h2>
-        {transaction.status === TransactionStatus.COMPLETED && (
+        {transaction.status === TransactionStatus.Completed && (
           <Button
             type="button"
             variant="light"
@@ -45,36 +44,26 @@ export function TransactionDetailsInfo({
           <p className="text-base font-medium">{transaction.reference}</p>
         </div>
 
-        {/* Bank */}
-        <div>
-          <p className="text-sm text-muted-foreground">{t("info.bank")}</p>
-          <p className="text-base font-medium">{tBank(transaction.bank)}</p>
-        </div>
-
         {/* Type */}
         <div>
           <p className="text-sm text-muted-foreground">{t("info.type")}</p>
-          <p className="text-base font-medium">
-            {tType(transaction.transaction_type)}
-          </p>
+          <p className="text-base font-medium">{tType(transaction.type)}</p>
         </div>
 
-        {/* Concept */}
-        <div>
-          <p className="text-sm text-muted-foreground">{t("info.concept")}</p>
-          <p className="text-base font-medium">{transaction.concept}</p>
-        </div>
-
-        {/* Created At */}
-        <div>
-          <p className="text-sm text-muted-foreground">{t("info.createdAt")}</p>
-          <p className="text-base font-medium">
-            {formatDate(transaction.created_at, "es-VE", {
-              dateStyle: "medium",
-              timeStyle: "short",
-            })}
-          </p>
-        </div>
+        {/* Transaction Date */}
+        {transaction.details?.trnDate && (
+          <div>
+            <p className="text-sm text-muted-foreground">
+              {t("info.createdAt")}
+            </p>
+            <p className="text-base font-medium">
+              {formatDate(transaction.details.trnDate, "es-VE", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </p>
+          </div>
+        )}
 
         {/* Updated At */}
         <div>
@@ -86,6 +75,16 @@ export function TransactionDetailsInfo({
             })}
           </p>
         </div>
+
+        {/* Concept */}
+        {transaction.details?.concept && (
+          <div className="col-span-2">
+            <p className="text-sm text-muted-foreground">{t("info.concept")}</p>
+            <p className="text-base font-medium">
+              {transaction.details?.concept}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )

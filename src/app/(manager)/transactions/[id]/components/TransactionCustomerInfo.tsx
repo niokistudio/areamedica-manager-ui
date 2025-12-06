@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl"
 import type { Transaction } from "@/types/transactions"
-import { formatDocument } from "@/utils/numbers"
+
+import { formatDocument } from "@/utils/document"
 
 interface TransactionCustomerInfoProps {
   transaction: Transaction
@@ -33,7 +34,7 @@ export function TransactionCustomerInfo({
         <div>
           <p className="text-sm text-muted-foreground">{t("nationalId")}</p>
           <p className="text-base font-medium">
-            {formatDocument(transaction.customer_national_id) || "-"}
+            {formatDocument(transaction.customer_document) || "-"}
           </p>
         </div>
       </div>

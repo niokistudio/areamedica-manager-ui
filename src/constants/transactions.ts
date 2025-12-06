@@ -3,8 +3,8 @@ import {
   AlertCircle,
   Ban,
   CheckCircle,
+  Clock,
   HelpCircle,
-  Loader2,
   type LucideIcon,
 } from "lucide-react"
 import type { TransactionStatus } from "@/types/transactions"
@@ -17,7 +17,7 @@ export const statusColorMap: Record<TransactionStatus, ChipProps["color"]> = {
   TO_REVIEW: "secondary",
 }
 export const statusIconMap: Record<TransactionStatus, LucideIcon> = {
-  IN_PROGRESS: Loader2,
+  IN_PROGRESS: Clock,
   COMPLETED: CheckCircle,
   CANCELED: Ban,
   UNKNOWN: HelpCircle,

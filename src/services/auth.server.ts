@@ -12,7 +12,7 @@
 import { apiRoutes } from "@/constants/api-routes"
 import { transformBackendError } from "@/lib/errors/errorHandler"
 import { fetchPost } from "@/lib/fetch/server"
-import { logError, logInfo, startTimer } from "@/lib/logger/server"
+import { logError } from "@/lib/logger/server"
 import type { AuthResponse, LoginRequest } from "@/types/auth"
 
 /**

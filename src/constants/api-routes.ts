@@ -11,4 +11,5 @@ export const apiRoutes = {
   refresh: "/auth/refresh",
   transactions: "/transactions",
   transactionById: (id: string) => `/transactions/${id}` as const,
+  refreshTransaction: (id: string) => `/transactions/${id}/refresh` as const,
 } as const

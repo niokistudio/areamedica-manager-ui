@@ -1,21 +1,16 @@
-import { DocumentPrefix } from "@/app/(manager)/transactions/new/form/NewTransactionForm.types"
 import type { INewTransactionForm } from "@/app/(manager)/transactions/new/form/use-new-transaction-form-schema"
-import type {
-  CreateTransactionRequest,
-  Transaction,
-} from "@/types/transactions"
+import { DocumentPrefix } from "@/types/document"
+import type { NewTransactionRequest, Transaction } from "@/types/transactions"
+import { decodeDocument, encodeDocument } from "@/utils/document"
 
 export function mapNewTransactionFormToServer(
   form: INewTransactionForm,
-  transaction?: Transaction,
-): CreateTransactionRequest {
+): NewTransactionRequest {
   return {
-    id: transaction?.id,
-    transaction_id: transaction?.transaction_id,
-    bank: form.bank,
+    type: form.type,
     reference: form.reference,
     customer_full_name: form.name,
-    customer_national_id: `${form.documentPrefix}${form.documentNumber}`,
+    customer_document: encodeDocument(form.documentPrefix, form.documentNumber),
     customer_phone: form.phone,
   }
 }
@@ -23,14 +18,15 @@ export function mapNewTransactionFormToServer(
 export function mapServerToNewTransactionForm(
   transaction: Transaction,
 ): INewTransactionForm {
+  const [documentPrefix, documentNumber] = decodeDocument(
+    transaction.customer_document,
+  )
   return {
-    bank: transaction.bank,
-    reference: transaction.reference,
     name: transaction.customer_full_name,
-    documentPrefix:
-      (transaction.customer_national_id[0] as DocumentPrefix) ||
-      DocumentPrefix.Venezuelan,
-    documentNumber: transaction.customer_national_id.substring(1),
     phone: transaction.customer_phone,
+    documentPrefix: documentPrefix || DocumentPrefix.Venezuelan,
+    documentNumber: documentNumber || "",
+    type: transaction.type,
+    reference: transaction.reference,
   }
 }

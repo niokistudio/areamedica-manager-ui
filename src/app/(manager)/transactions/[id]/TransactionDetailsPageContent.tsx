@@ -1,16 +1,20 @@
 "use client"
 
-import { Card, CardBody } from "@heroui/card"
+import { addToast } from "@heroui/toast"
 import { AlertCircle, ArrowLeft, FileX, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { useTranslations } from "next-intl"
+import { useCallback, useState } from "react"
+import { mutate } from "swr"
 import { TransactionCustomerInfo } from "@/app/(manager)/transactions/[id]/components/TransactionCustomerInfo"
 import { TransactionDetailsInfo } from "@/app/(manager)/transactions/[id]/components/TransactionDetailsInfo"
 import { TransactionPrimaryInfo } from "@/app/(manager)/transactions/[id]/components/TransactionPrimaryInfo"
 import { Button } from "@/components/ui/Button"
 import { Loader } from "@/components/ui/Loader"
+import { apiRoutes } from "@/constants/api-routes"
 import { routes } from "@/constants/routes"
 import { useTransaction } from "@/hooks/use-transaction"
+import { refreshTransaction } from "@/services/transactions.client"
 
 interface TransactionDetailsPageContentProps {
   transactionId: string
@@ -21,6 +25,33 @@ export function TransactionDetailsPageContent({
 }: TransactionDetailsPageContentProps) {
   const t = useTranslations("TransactionsPage.detail")
   const { transaction, isLoading, error } = useTransaction(transactionId)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const handleRefresh = useCallback(async () => {
+    try {
+      setIsRefreshing(true)
+
+      await refreshTransaction(transactionId)
+
+      // Invalidate both the transaction list and the specific transaction cache
+      await Promise.all([
+        mutate(apiRoutes.transactions),
+        mutate(apiRoutes.transactionById(transactionId)),
+      ])
+
+      addToast({
+        title: t("refreshSuccess"),
+        color: "success",
+      })
+    } catch (_error) {
+      addToast({
+        title: t("refreshError"),
+        color: "danger",
+      })
+    } finally {
+      setIsRefreshing(false)
+    }
+  }, [transactionId, t])
 
   return (
     <div className="h-full flex flex-col pt-2 md:pt-10">
@@ -38,7 +69,14 @@ export function TransactionDetailsPageContent({
           </Button>
           <h1 className="text-3xl font-bold">{t("title")}</h1>
         </div>
-        <Button type="button" variant="light" color="primary">
+        <Button
+          type="button"
+          variant="light"
+          color="primary"
+          onPress={handleRefresh}
+          isLoading={isRefreshing}
+          isDisabled={isRefreshing}
+        >
           <RefreshCw className="size-4" />
           {t("actions.update")}
         </Button>
