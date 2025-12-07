@@ -2,7 +2,7 @@
 
 import { Card, CardBody } from "@heroui/card"
 import { useTranslations } from "next-intl"
-import { LoginForm } from "./LoginForm"
+import { LoginForm } from "../form/LoginForm"
 
 export function LoginPageContent() {
   const t = useTranslations("Auth.LoginPage")

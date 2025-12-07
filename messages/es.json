@@ -17,7 +17,9 @@
         "required": "La contraseña es obligatoria"
       },
       "submit": "Entrar",
-      "submitting": "Entrando..."
+      "submitting": "Entrando...",
+      "success": "Inicio de sesión exitoso",
+      "error": "Error al iniciar sesión"
     }
   },
   "TransactionsPage": {
@@ -121,7 +123,8 @@
     "numericOnly": "Solo debe contener números",
     "documentMinLength": "El documento debe tener al menos 5 dígitos",
     "documentMaxLength": "El documento no debe exceder los 10 dígitos",
-    "invalidSelection": "Selección inválida"
+    "invalidSelection": "Selección inválida",
+    "invalidEmail": "Ingresa un correo electrónico válido"
   },
   "ITransactions": {
     "TransactionType": {
