@@ -61,8 +61,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       // Call the logout API route to clear cookies
       await logoutUser()
-    } catch (error) {
-      console.error("Logout error:", error)
     } finally {
       // Always clear client-side token
       removeAccessToken()

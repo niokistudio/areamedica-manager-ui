@@ -44,12 +44,6 @@ const swrConfig: SWRConfiguration = {
 
   // Stale time
   focusThrottleInterval: 5000, // Throttle revalidation on focus to every 5 seconds
-
-  // Error handling
-  onError: (error: APIError) => {
-    console.error("SWR Error:", error)
-    // Can add global error handling here (e.g., toast notifications)
-  },
 }
 
 export function SWRClientProvider({ children }: SWRProviderProps) {

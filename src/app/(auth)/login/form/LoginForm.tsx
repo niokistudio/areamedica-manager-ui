@@ -36,7 +36,6 @@ export function LoginForm() {
           severity: "success",
         })
       } catch (error) {
-        console.error("Login error:", error)
         const apiError = error as APIError
         addToast({
           title: apiError.message || t("error"),
