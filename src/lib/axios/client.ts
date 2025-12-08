@@ -1,4 +1,6 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios"
+import { mutate } from "swr"
+import { apiRoutes } from "@/constants/api-routes"
 import {
   getAccessToken,
   removeAccessToken,
@@ -62,6 +64,10 @@ axiosClient.interceptors.response.use(
         // Store new access token
         setAccessToken(accessToken)
 
+        // Trigger user revalidation to update auth state
+        // This ensures the client guards detect the auth state change
+        mutate(apiRoutes.userInfo)
+
         // Mark request as retried to prevent infinite loops
         originalRequest.headers = originalRequest.headers || {}
         originalRequest.headers["X-Retry"] = "true"
@@ -71,8 +77,11 @@ axiosClient.interceptors.response.use(
         return axiosClient(originalRequest)
       } catch (refreshError) {
         console.log("refresh error", refreshError)
-        // Refresh failed, clear tokens and redirect to login
+        // Refresh failed, clear tokens and SWR cache
         removeAccessToken()
+
+        // Clear the user from SWR cache to trigger auth state change
+        await mutate(apiRoutes.userInfo, undefined, false)
 
         return Promise.reject(refreshError)
       }
