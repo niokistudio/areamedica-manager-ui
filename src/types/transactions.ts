@@ -14,16 +14,16 @@ export enum TransactionType {
 export interface TransactionDetails {
   referenceNumber: string // Internal reference number
   amount: number // Transaction amount
-  // currencyCode: string // Currency code (e.g., "USD", "VES")
-  // exchangeRate: number // Exchange rate applied
-  // accountId: string // Account identifier
+  currencyCode?: string // Currency code (e.g., "USD", "BS")
+  exchangeRate?: number // Exchange rate applied
+  accountId?: string // Account identifier (masked)
   trnDate?: string // Transaction date (YYYY-MM-DD)
   trnTime?: string // Transaction time (HH:mm:ss)
-  // sourceBankId: string // Source bank identifier
-  // destBankId: string // Destination bank identifier
+  sourceBankId?: string // Source bank identifier
+  destBankId?: string // Destination bank identifier
   concept?: string // Transaction concept/description
-  // customerIdBen: string // Beneficiary customer ID
-  trnType?: string // Transaction type code
+  customerIdBen?: string // Beneficiary customer ID
+  trnType?: string // Transaction type code (e.g., "CR", "DB")
 }
 
 export interface Transaction {
@@ -34,6 +34,8 @@ export interface Transaction {
   customer_phone: string // Customer's phone number
   customer_document: string // Customer's document/ID number
   type: TransactionType
+  amount?: string // Transaction amount (string from API)
+  concept?: string // Transaction concept/description
   details?: TransactionDetails // Nested transaction details
   created_at: string // ISO 8601 timestamp
   updated_at: string // ISO 8601 timestamp
@@ -80,8 +82,6 @@ export interface NewTransactionRequest {
 // }
 
 export interface CreateTransactionRequest {
-  id?: string
-  transaction_id?: string
   bank: string
   reference: string
   customer_full_name?: string
@@ -90,7 +90,7 @@ export interface CreateTransactionRequest {
 }
 
 export interface UpdateTransactionRequest {
-  transaction_id: string
+  id: string
   status?: TransactionStatus
   customer_full_name?: string
   customer_phone?: string
