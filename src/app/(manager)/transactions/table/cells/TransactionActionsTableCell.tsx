@@ -66,8 +66,13 @@ export function TransactionActionsTableCell({
 
       await deleteTransaction(transaction.id)
 
-      // Invalidate transaction cache to refresh the list
-      await mutate(apiRoutes.transactions)
+      // Invalidate all transaction-related caches
+      await mutate((key) => {
+        if (typeof key === "string") {
+          return key.startsWith(apiRoutes.transactions)
+        }
+        return false
+      })
 
       addToast({
         title: t("deleteSuccess"),

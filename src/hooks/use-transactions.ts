@@ -78,8 +78,6 @@ export function useTransactions(
     PaginatedResponse<Transaction>,
     APIError
   >(key, {
-    revalidateOnFocus: true,
-    dedupingInterval: 5000,
     // Don't retry on 4xx errors
     shouldRetryOnError: (err: APIError) => {
       return !(err.status >= 400 && err.status < 500)
