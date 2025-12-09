@@ -12,4 +12,5 @@ export const apiRoutes = {
   transactions: "/transactions",
   transactionById: (id: string) => `/transactions/${id}` as const,
   refreshTransaction: (id: string) => `/transactions/${id}/refresh` as const,
+  transactionsBulkDelete: "/transactions/bulk-delete",
 } as const

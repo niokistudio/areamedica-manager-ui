@@ -50,6 +50,15 @@
         "error": "Error al consultar la transacción"
       }
     },
+    "toolbar": {
+      "actions": {
+        "delete": "Eliminar seleccionadas",
+        "deleteConfirmTitle": "{count, plural, one {Eliminar transacción} other {Eliminar # transacciones}}",
+        "deleteConfirmDescription": "{count, plural, one {¿Estás seguro de que deseas eliminar esta transacción?} other {¿Estás seguro de que deseas eliminar estas # transacciones?}} Esta acción no se puede deshacer.",
+        "deleteSuccess": "{count, plural, one {Transacción eliminada exitosamente} other {# transacciones eliminadas exitosamente}}",
+        "deleteError": "Error al eliminar las transacciones"
+      }
+    },
     "table": {
       "column": {
         "status": "Estado",

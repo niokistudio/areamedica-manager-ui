@@ -22,6 +22,8 @@ export interface UseTransactionsReturn {
   mutate: () => void
 }
 
+const TRANSACTIONS_PER_PAGE = 10
+
 /**
  * Hook for fetching paginated transactions from the backend
  *
@@ -42,7 +44,13 @@ export interface UseTransactionsReturn {
 export function useTransactions(
   params: UseTransactionsParams = {},
 ): UseTransactionsReturn {
-  const { page = 1, limit = 10, search, fromDate, toDate } = params
+  const {
+    page = 1,
+    limit = TRANSACTIONS_PER_PAGE,
+    search,
+    fromDate,
+    toDate,
+  } = params
 
   // Calculate offset for backend API
   const offset = (page - 1) * limit

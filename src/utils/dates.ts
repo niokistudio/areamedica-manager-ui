@@ -19,6 +19,10 @@ export function formatDate(
   locale: string = "es-VE",
   options?: Intl.DateTimeFormatOptions,
 ): string {
+  //  TODO: Edit screen can only apply to pending transactions, success transactions should not be updated
+  //  TODO: Remove functionality does not update cache
+  //  TODO: Bulk download and bulk delete
+  //  TODO: Filter transactions by date
   const defaultOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "numeric",

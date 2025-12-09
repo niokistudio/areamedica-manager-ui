@@ -10,8 +10,6 @@ import { usePaginationParams } from "@/hooks/use-pagination-params"
 import { useTransactions } from "@/hooks/use-transactions"
 import { useTransactionsStore } from "@/stores/useTransactionsStore"
 
-const ROWS_PER_PAGE = 10
-
 export function TransactionsPageContent() {
   const t = useTranslations("TransactionsPage")
   // Get pagination and filter state from URL params (single source of truth)
@@ -24,7 +22,6 @@ export function TransactionsPageContent() {
   // Fetch transactions from API
   const { transactions, totalPages, isLoading, error } = useTransactions({
     page,
-    limit: ROWS_PER_PAGE,
     search,
     fromDate,
     toDate,
