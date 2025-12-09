@@ -80,8 +80,6 @@ export interface NewTransactionRequest {
 // }
 
 export interface CreateTransactionRequest {
-  id?: string
-  transaction_id?: string
   bank: string
   reference: string
   customer_full_name?: string
@@ -90,7 +88,7 @@ export interface CreateTransactionRequest {
 }
 
 export interface UpdateTransactionRequest {
-  transaction_id: string
+  id: string
   status?: TransactionStatus
   customer_full_name?: string
   customer_phone?: string
