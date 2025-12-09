@@ -1,25 +1,25 @@
-import { Download } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useCallback } from "react";
-import { Button } from "@/components/ui/Button";
-import { useReceiptPrint } from "@/hooks/useReceiptPrint";
-import { type Transaction, TransactionStatus } from "@/types/transactions";
-import { formatDate } from "@/utils/dates";
+import { Download } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useCallback } from "react"
+import { Button } from "@/components/ui/Button"
+import { useReceiptPrint } from "@/hooks/useReceiptPrint"
+import { type Transaction, TransactionStatus } from "@/types/transactions"
+import { formatDate } from "@/utils/dates"
 
 interface TransactionDetailsInfoProps {
-  transaction: Transaction;
+  transaction: Transaction
 }
 
 export function TransactionDetailsInfo({
   transaction,
 }: TransactionDetailsInfoProps) {
-  const t = useTranslations("TransactionsPage.detail");
-  const tType = useTranslations("ITransactions.TransactionType");
-  const { openReceiptModal } = useReceiptPrint();
+  const t = useTranslations("TransactionsPage.detail")
+  const tType = useTranslations("ITransactions.TransactionType")
+  const { openReceiptModal } = useReceiptPrint()
 
   const handleDownload = useCallback(() => {
-    openReceiptModal(transaction);
-  }, [transaction, openReceiptModal]);
+    openReceiptModal(transaction)
+  }, [transaction, openReceiptModal])
 
   return (
     <div className="flex flex-col gap-6">
@@ -87,5 +87,5 @@ export function TransactionDetailsInfo({
         )}
       </div>
     </div>
-  );
+  )
 }

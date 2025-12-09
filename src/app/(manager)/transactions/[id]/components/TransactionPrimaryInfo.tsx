@@ -1,30 +1,30 @@
-import { Card, CardBody } from "@heroui/card";
-import { Chip } from "@heroui/chip";
-import { useTranslations } from "next-intl";
-import { useMemo } from "react";
-import { statusColorMap, statusIconMap } from "@/constants/transactions";
-import type { Transaction } from "@/types/transactions";
-import { formatCurrency } from "@/utils/numbers";
+import { Card, CardBody } from "@heroui/card"
+import { Chip } from "@heroui/chip"
+import { useTranslations } from "next-intl"
+import { useMemo } from "react"
+import { statusColorMap, statusIconMap } from "@/constants/transactions"
+import type { Transaction } from "@/types/transactions"
+import { formatCurrency } from "@/utils/numbers"
 
 interface TransactionPrimaryInfoProps {
-  transaction: Transaction;
+  transaction: Transaction
 }
 
 export function TransactionPrimaryInfo({
   transaction,
 }: TransactionPrimaryInfoProps) {
-  const tStatus = useTranslations("ITransactions.TransactionStatus");
+  const tStatus = useTranslations("ITransactions.TransactionStatus")
 
   // Map status to Chip color
   const Icon = useMemo(
     () => statusIconMap[transaction.status],
-    [transaction.status]
-  );
+    [transaction.status],
+  )
 
   // Get amount from transaction level or fallback to details
   const amount = transaction.amount
     ? Number.parseFloat(transaction.amount)
-    : transaction.details?.amount;
+    : transaction.details?.amount
 
   return (
     <div className="flex flex-col justify-center items-center gap-6">
@@ -47,5 +47,5 @@ export function TransactionPrimaryInfo({
         </CardBody>
       </Card>
     </div>
-  );
+  )
 }

@@ -1,26 +1,26 @@
-import { Chip } from "@heroui/chip";
-import { useTranslations } from "next-intl";
-import Logo from "@/assets/logo/logo-areamedica.svg";
-import { statusColorMap, statusIconMap } from "@/constants/transactions";
-import type { Transaction } from "@/types/transactions";
-import { formatDate } from "@/utils/dates";
-import { formatDocument } from "@/utils/document";
-import { formatCurrency } from "@/utils/numbers";
+import { Chip } from "@heroui/chip"
+import { useTranslations } from "next-intl"
+import Logo from "@/assets/logo/logo-areamedica.svg"
+import { statusColorMap, statusIconMap } from "@/constants/transactions"
+import type { Transaction } from "@/types/transactions"
+import { formatDate } from "@/utils/dates"
+import { formatDocument } from "@/utils/document"
+import { formatCurrency } from "@/utils/numbers"
 
 interface TransactionReceiptPrintProps {
-  transaction: Transaction;
+  transaction: Transaction
 }
 
 export function TransactionReceiptPrint({
   transaction,
 }: TransactionReceiptPrintProps) {
-  const tReceipt = useTranslations("TransactionReceipt.receipt");
-  const tCustomer = useTranslations("TransactionsPage.detail.customer");
-  const tInfo = useTranslations("TransactionsPage.detail.info");
-  const tStatus = useTranslations("ITransactions.TransactionStatus");
-  const tType = useTranslations("ITransactions.TransactionType");
+  const tReceipt = useTranslations("TransactionReceipt.receipt")
+  const tCustomer = useTranslations("TransactionsPage.detail.customer")
+  const tInfo = useTranslations("TransactionsPage.detail.info")
+  const tStatus = useTranslations("ITransactions.TransactionStatus")
+  const tType = useTranslations("ITransactions.TransactionType")
 
-  const StatusIcon = statusIconMap[transaction.status];
+  const StatusIcon = statusIconMap[transaction.status]
 
   return (
     <div className="receipt-print-root bg-white p-8 max-w-[794px] mx-auto">
@@ -146,5 +146,5 @@ export function TransactionReceiptPrint({
         </p>
       </div>
     </div>
-  );
+  )
 }
