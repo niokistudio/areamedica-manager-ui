@@ -6,8 +6,8 @@ import {
   DropdownTrigger,
 } from "@heroui/dropdown"
 import { addToast } from "@heroui/toast"
+import type { LucideIcon } from "lucide-react"
 import { Download, Ellipsis, Eye, Pencil, Trash2 } from "lucide-react"
-import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { useCallback, useMemo, useState } from "react"
 import { mutate } from "swr"
@@ -17,17 +17,28 @@ import { ConfirmationError } from "@/errors/ConfirmationError"
 import { useConfirmDialog } from "@/hooks/useConfirmDialog"
 import { useReceiptPrint } from "@/hooks/useReceiptPrint"
 import { deleteTransaction } from "@/services/transactions.client"
-import { type ITransaction, TransactionStatus } from "@/types/transactions"
+import { type Transaction, TransactionStatus } from "@/types/transactions"
 
 interface TransactionActionsTableCellProps {
-  transaction: ITransaction
+  transaction: Transaction
+}
+
+interface TransactionAction {
+  key: string
+  label: string
+  icon: LucideIcon
+  onClick?: () => void
+  href?: string
+  className?: string
+  color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger"
+  isDisabled?: boolean
+  isVisible?: (transaction: Transaction) => boolean
 }
 
 export function TransactionActionsTableCell({
   transaction,
 }: TransactionActionsTableCellProps) {
   const t = useTranslations("TransactionsPage.table.actions")
-  const router = useRouter()
   const { confirm } = useConfirmDialog()
   const { openReceiptModal } = useReceiptPrint()
   const [isDeleting, setIsDeleting] = useState(false)
@@ -81,9 +92,55 @@ export function TransactionActionsTableCell({
     openReceiptModal(transaction)
   }, [transaction, openReceiptModal])
 
-  const handleEdit = useCallback(() => {
-    router.push(editUrl)
-  }, [router, editUrl])
+  // Define all possible actions in an array
+  const actions = useMemo<TransactionAction[]>(
+    () => [
+      {
+        key: "open",
+        label: t("openDetails"),
+        icon: Eye,
+        href: detailsUrl,
+      },
+      {
+        key: "edit",
+        label: t("edit"),
+        icon: Pencil,
+        href: editUrl,
+        // Only show download action for processing transactions
+        isVisible: (transaction) =>
+          transaction.status === TransactionStatus.InProgress ||
+          transaction.status === TransactionStatus.ToReview,
+      },
+      {
+        key: "download",
+        label: t("download"),
+        icon: Download,
+        onClick: handleDownload,
+        // Only show download action for completed transactions
+        isVisible: (transaction) =>
+          transaction.status === TransactionStatus.Completed,
+      },
+      {
+        key: "delete",
+        label: t("delete"),
+        icon: Trash2,
+        onClick: handleDelete,
+        className: "text-danger",
+        color: "danger",
+        isDisabled: isDeleting,
+      },
+    ],
+    [t, detailsUrl, editUrl, handleDownload, handleDelete, isDeleting],
+  )
+
+  // Filter actions based on showWhen condition
+  const visibleActions = useMemo(
+    () =>
+      actions.filter(
+        (action) => !action.isVisible || action.isVisible(transaction),
+      ),
+    [actions, transaction],
+  )
 
   return (
     <Dropdown>
@@ -97,39 +154,22 @@ export function TransactionActionsTableCell({
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label={t("menu")} variant="faded">
-        <DropdownItem
-          key="open"
-          href={detailsUrl}
-          startContent={<Eye className="size-4" />}
-        >
-          {t("openDetails")}
-        </DropdownItem>
-        <DropdownItem
-          key="edit"
-          startContent={<Pencil className="size-4" />}
-          onClick={handleEdit}
-        >
-          {t("edit")}
-        </DropdownItem>
-        {transaction.status === TransactionStatus.Completed ? (
-          <DropdownItem
-            key="download"
-            startContent={<Download className="size-4" />}
-            onClick={handleDownload}
-          >
-            {t("download")}
-          </DropdownItem>
-        ) : null}
-        <DropdownItem
-          key="delete"
-          className="text-danger"
-          color="danger"
-          startContent={<Trash2 className="size-4" />}
-          isDisabled={isDeleting}
-          onClick={handleDelete}
-        >
-          {t("delete")}
-        </DropdownItem>
+        {visibleActions.map((action) => {
+          const Icon = action.icon
+          return (
+            <DropdownItem
+              key={action.key}
+              href={action.href}
+              onClick={action.onClick}
+              className={action.className}
+              color={action.color}
+              isDisabled={action.isDisabled}
+              startContent={<Icon className="size-4" />}
+            >
+              {action.label}
+            </DropdownItem>
+          )
+        })}
       </DropdownMenu>
     </Dropdown>
   )

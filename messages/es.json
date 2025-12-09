@@ -134,7 +134,7 @@
       "MOBILE_PAYMENT": "Pago Móvil"
     },
     "TransactionStatus": {
-      "IN_PROGRESS": "En progreso",
+      "IN_PROGRESS": "Pendiente",
       "COMPLETED": "Completada",
       "CANCELED": "Cancelada",
       "UNKNOWN": "Desconocida",
