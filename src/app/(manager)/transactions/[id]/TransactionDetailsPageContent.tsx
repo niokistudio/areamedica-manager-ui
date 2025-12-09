@@ -15,6 +15,7 @@ import { apiRoutes } from "@/constants/api-routes"
 import { routes } from "@/constants/routes"
 import { useTransaction } from "@/hooks/use-transaction"
 import { refreshTransaction } from "@/services/transactions.client"
+import { TransactionStatus } from "@/types/transactions"
 
 interface TransactionDetailsPageContentProps {
   transactionId: string
@@ -69,17 +70,19 @@ export function TransactionDetailsPageContent({
           </Button>
           <h1 className="text-3xl font-bold">{t("title")}</h1>
         </div>
-        <Button
-          type="button"
-          variant="light"
-          color="primary"
-          onPress={handleRefresh}
-          isLoading={isRefreshing}
-          isDisabled={isRefreshing}
-        >
-          <RefreshCw className="size-4" />
-          {t("actions.update")}
-        </Button>
+        {transaction?.status === TransactionStatus.InProgress && (
+          <Button
+            type="button"
+            variant="light"
+            color="primary"
+            onPress={handleRefresh}
+            isLoading={isRefreshing}
+            isDisabled={isRefreshing}
+          >
+            <RefreshCw className="size-4" />
+            {t("actions.update")}
+          </Button>
+        )}
       </div>
 
       {/* Loading State */}

@@ -22,9 +22,13 @@ export function TransactionPrimaryInfo({
   )
 
   // Get amount from transaction level or fallback to details
-  const amount = transaction.amount
-    ? Number.parseFloat(transaction.amount)
-    : transaction.details?.amount
+  const amount = useMemo(
+    () =>
+      transaction.amount
+        ? Number.parseFloat(transaction.amount)
+        : transaction.details?.amount,
+    [transaction.amount, transaction.details?.amount],
+  )
 
   return (
     <div className="flex flex-col justify-center items-center gap-6">

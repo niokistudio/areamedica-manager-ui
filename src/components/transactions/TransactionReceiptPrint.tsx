@@ -1,5 +1,6 @@
 import { Chip } from "@heroui/chip"
 import { useTranslations } from "next-intl"
+import { useMemo } from "react"
 import Logo from "@/assets/logo/logo-areamedica.svg"
 import { statusColorMap, statusIconMap } from "@/constants/transactions"
 import type { Transaction } from "@/types/transactions"
@@ -22,6 +23,14 @@ export function TransactionReceiptPrint({
 
   const StatusIcon = statusIconMap[transaction.status]
 
+  const amount = useMemo(
+    () =>
+      transaction.amount
+        ? Number.parseFloat(transaction.amount)
+        : transaction.details?.amount,
+    [transaction.amount, transaction.details?.amount],
+  )
+
   return (
     <div className="receipt-print-root bg-white p-8 max-w-[794px] mx-auto">
       {/* Header Section */}
@@ -39,9 +48,9 @@ export function TransactionReceiptPrint({
         <p className="text-sm text-muted-foreground mb-2">
           {tReceipt("amount")}
         </p>
-        {transaction.details?.amount && (
+        {amount && (
           <p className="text-5xl font-bold text-foreground mb-4">
-            {formatCurrency(transaction.details?.amount)}
+            {formatCurrency(amount)}
           </p>
         )}
         <div className="flex justify-center">
@@ -123,13 +132,13 @@ export function TransactionReceiptPrint({
               </p>
             </div>
           )}
-          {transaction.details?.concept && (
+          {(transaction.concept || transaction.details?.concept) && (
             <div>
               <p className="text-sm text-muted-foreground mb-1">
                 {tInfo("concept")}
               </p>
               <p className="text-base font-medium text-foreground">
-                {transaction.details.concept}
+                {transaction.concept || transaction.details?.concept}
               </p>
             </div>
           )}
