@@ -99,6 +99,7 @@ export function transformBackendError(
 ): AppError {
   // Handle axios/fetch errors with response
   if (error && typeof error === "object" && "response" in error) {
+    // biome-ignore lint/suspicious/noExplicitAny: error is unknown and we need to access response property dynamically
     const response = (error as any).response
     const data = response?.data as BackendError | undefined
 
@@ -168,6 +169,7 @@ export function transformBackendError(
  *   'login'
  * )
  */
+// biome-ignore lint/suspicious/noExplicitAny: Generic wrapper needs to accept any function signature
 export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
   fn: T,
   operation: string,
