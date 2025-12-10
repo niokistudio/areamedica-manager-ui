@@ -51,6 +51,10 @@
       }
     },
     "toolbar": {
+      "filters": {
+        "searchPlaceholder": "Buscar transacciones",
+        "dateRange": "Rango de fechas"
+      },
       "actions": {
         "delete": "Eliminar seleccionadas",
         "deleteConfirmTitle": "{count, plural, one {Eliminar transacción} other {Eliminar # transacciones}}",
