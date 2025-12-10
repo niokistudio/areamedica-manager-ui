@@ -58,7 +58,6 @@ export function TransactionsTable({
         selectionMode="multiple"
         selectedKeys={selectedKeys}
         onSelectionChange={setSelectedKeys}
-        onRowAction={redirectToDetails}
       >
         <TableHeader columns={columns}>
           {(column) => (

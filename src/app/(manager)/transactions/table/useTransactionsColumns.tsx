@@ -1,5 +1,6 @@
 import { getKeyValue } from "@heroui/table"
 import type { Key } from "@react-types/shared"
+import Link from "next/link"
 import { useTranslations } from "next-intl"
 import { type ReactNode, useCallback, useMemo } from "react"
 import { TransactionActionsTableCell } from "@/app/(manager)/transactions/table/cells/TransactionActionsTableCell"
@@ -8,6 +9,7 @@ import { TransactionTypeTableCell } from "@/app/(manager)/transactions/table/cel
 import { CurrencyTableCell } from "@/components/ui/table-cells/CurrencyTableCell"
 import { DateTableCell } from "@/components/ui/table-cells/DateTableCell"
 import { DefaultTableCell } from "@/components/ui/table-cells/DefaultTableCell"
+import { routes } from "@/constants/routes"
 import type { Transaction } from "@/types/transactions"
 import { formatDocument } from "@/utils/document"
 import type {
@@ -35,11 +37,27 @@ const columnRenderers: Partial<
   ),
   date: (transaction) => <DateTableCell value={transaction.created_at} />,
   amount: (transaction) => (
-    <CurrencyTableCell value={transaction.details?.amount || 0} />
+    <CurrencyTableCell
+      value={
+        transaction.amount
+          ? parseFloat(transaction.amount)
+          : transaction.details?.amount
+      }
+    />
   ),
   type: (transaction) => <TransactionTypeTableCell type={transaction.type} />,
   actions: (transaction) => (
     <TransactionActionsTableCell transaction={transaction} />
+  ),
+  reference: (transaction) => (
+    <DefaultTableCell className="break-keep text-nowrap">
+      <Link
+        href={routes.transactionDetail(transaction.id)}
+        className="text-primary hover:underline underline-offset-2"
+      >
+        {transaction.reference}
+      </Link>
+    </DefaultTableCell>
   ),
   name: "customer_full_name",
   phone: "customer_phone",
@@ -54,14 +72,14 @@ export function useTransactionsColumns() {
 
   const columns: TransactionColumn[] = useMemo(
     () => [
-      { key: "name", label: t("column.name"), sortable: true },
-      { key: "nationalId", label: t("column.nationalId"), sortable: true },
-      { key: "phone", label: t("column.phone"), sortable: false },
       { key: "status", label: t("column.status"), sortable: true },
       { key: "reference", label: t("column.reference"), sortable: true },
       { key: "date", label: t("column.date"), sortable: true },
       { key: "amount", label: t("column.amount"), sortable: true },
       { key: "type", label: t("column.type"), sortable: true },
+      { key: "name", label: t("column.name"), sortable: true },
+      { key: "nationalId", label: t("column.nationalId"), sortable: true },
+      { key: "phone", label: t("column.phone"), sortable: false },
       { key: "actions", label: "", sortable: false },
     ],
     [t],
