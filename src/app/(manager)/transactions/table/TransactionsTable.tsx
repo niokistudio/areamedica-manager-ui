@@ -10,8 +10,6 @@ import {
 } from "@heroui/table"
 import type { Key } from "@react-types/shared"
 import dynamic from "next/dynamic"
-import { useRouter } from "next/navigation"
-import { routes } from "@/constants/routes"
 import { useTransactionsStore } from "@/stores/useTransactionsStore"
 import type { Transaction } from "@/types/transactions"
 import { useTransactionsColumns } from "./useTransactionsColumns"
@@ -40,13 +38,8 @@ export function TransactionsTable({
   totalPages,
   onPageChange,
 }: TransactionsTableProps) {
-  const router = useRouter()
   const { columns, renderCell } = useTransactionsColumns()
   const { selectedKeys, setSelectedKeys } = useTransactionsStore()
-
-  const redirectToDetails = (id: Key | bigint) => {
-    router.push(routes.transactionDetail(id as string))
-  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -54,10 +47,13 @@ export function TransactionsTable({
         aria-label="Transactions table"
         classNames={{
           wrapper: "min-h-[400px]",
+          td: "select-text cursor-text",
         }}
         selectionMode="multiple"
         selectedKeys={selectedKeys}
         onSelectionChange={setSelectedKeys}
+        selectionBehavior="toggle"
+        disallowEmptySelection={false}
       >
         <TableHeader columns={columns}>
           {(column) => (
