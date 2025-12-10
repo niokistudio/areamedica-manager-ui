@@ -39,13 +39,18 @@ export function TransactionsPageContent() {
 
   return (
     <div className="h-full flex flex-col pt-10">
-      <div className="flex justify-between mb-14">
-        <h1 className="text-3xl font-bold">{t("list.title")}</h1>
-        <Button as={Link} href="/transactions/new" color="primary">
+      <div className="flex justify-between flex-col sm:flex-row gap-4 mb-6 sm:mb-14">
+        <h1 className="text-3xl font-bold text-center">{t("list.title")}</h1>
+        <Button
+          as={Link}
+          href="/transactions/new"
+          color="primary"
+          className="self-center"
+        >
           {t("list.newButton")} <Plus className="size-4" />
         </Button>
       </div>
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4 sm:gap-8">
         <TransactionsToolbar />
         {error ? (
           <div className="text-center">
