@@ -2,7 +2,7 @@
 
 import { TransactionsDeleteAction } from "@/app/(manager)/transactions/toolbar/actions/TransactionsDeleteAction"
 import { TransactionsEditAction } from "@/app/(manager)/transactions/toolbar/actions/TransactionsEditAction"
-import { DateRangeFilter } from "@/app/(manager)/transactions/toolbar/filters/DateRangeFilter"
+import { FiltersPopover } from "@/app/(manager)/transactions/toolbar/filters/FiltersPopover"
 import { SearchFilter } from "@/app/(manager)/transactions/toolbar/filters/SearchFilter"
 import { useTransactionsStore } from "@/stores/useTransactionsStore"
 
@@ -13,7 +13,7 @@ export function TransactionsToolbar() {
     <div className="flex justify-between gap-2">
       <div className="flex items-end gap-2">
         <SearchFilter />
-        <DateRangeFilter />
+        <FiltersPopover />
       </div>
       {selectedKeys === "all" || selectedKeys.size ? (
         <div className="flex gap-2">

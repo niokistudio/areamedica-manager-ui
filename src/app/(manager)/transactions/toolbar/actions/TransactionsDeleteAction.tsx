@@ -1,6 +1,7 @@
 "use client"
 
 import { addToast } from "@heroui/toast"
+import { AnimatePresence, motion } from "framer-motion"
 import { Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useCallback, useState } from "react"
@@ -92,17 +93,35 @@ export function TransactionsDeleteAction() {
   const selectedCount =
     selectedKeys === "all" ? transactions.length : selectedKeys.size
 
+  // Show text content only when more than 1 item is selected
+  const showText = selectedCount > 1
+
   return (
     <Button
-      variant="light"
+      variant="flat"
       color="danger"
-      isIconOnly
+      isIconOnly={!showText}
       onPress={handleDelete}
       isDisabled={isDeleting || selectedCount === 0}
       aria-label={t("delete")}
       title={t("delete")}
+      className="overflow-hidden transition-size duration-200"
     >
-      <Trash2 className="size-4" />
+      <Trash2 className="size-4 shrink-0" />
+      <AnimatePresence mode="sync">
+        {showText && (
+          <motion.span
+            key="delete-text"
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: "auto", opacity: 1 }}
+            exit={{ width: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="overflow-hidden whitespace-nowrap"
+          >
+            {t("delete")}
+          </motion.span>
+        )}
+      </AnimatePresence>
     </Button>
   )
 }

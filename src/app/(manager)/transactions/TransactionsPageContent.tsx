@@ -38,7 +38,7 @@ export function TransactionsPageContent() {
   }
 
   return (
-    <div className="h-full flex flex-col pt-10">
+    <div className="h-full flex flex-col md:pt-10">
       <div className="flex justify-between flex-col sm:flex-row gap-4 mb-6 sm:mb-14">
         <h1 className="text-3xl font-bold text-center">{t("list.title")}</h1>
         <Button

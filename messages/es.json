@@ -53,7 +53,12 @@
     "toolbar": {
       "filters": {
         "searchPlaceholder": "Buscar transacciones",
-        "dateRange": "Rango de fechas"
+        "dateRange": "Rango de fechas",
+        "popoverTitle": "Filtros",
+        "popoverTrigger": "Aplicar filtros",
+        "apply": "Aplicar",
+        "reset": "Restablecer",
+        "cancel": "Cancelar"
       },
       "actions": {
         "delete": "Eliminar seleccionadas",

@@ -24,7 +24,7 @@ export function TransactionsEditAction() {
     <Button
       as={Link}
       href={editUrl}
-      variant="light"
+      variant="flat"
       color="primary"
       isIconOnly
       aria-label="Editar"
