@@ -13,6 +13,7 @@ interface TransactionPrimaryInfoProps {
 export function TransactionPrimaryInfo({
   transaction,
 }: TransactionPrimaryInfoProps) {
+  const t = useTranslations("TransactionsPage.detail")
   const tStatus = useTranslations("ITransactions.TransactionStatus")
 
   // Map status to Chip color
@@ -38,7 +39,9 @@ export function TransactionPrimaryInfo({
       {/* Status - Chip badge */}
       <Card shadow="sm">
         <CardBody className="py-6 px-8">
-          <p className="text-sm text-muted-foreground mb-2">Estado</p>
+          <p className="text-sm text-muted-foreground mb-2">
+            {t("statusLabel")}
+          </p>
           <Chip
             color={statusColorMap[transaction.status]}
             variant="light"

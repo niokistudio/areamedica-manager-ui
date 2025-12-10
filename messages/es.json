@@ -2,6 +2,11 @@
   "HomePage": {
     "title": "Hola mundo"
   },
+  "Layout": {
+    "Footer": {
+      "copyright": "© {year} Nioki Studio"
+    }
+  },
   "Auth": {
     "LoginPage": {
       "title": "Ingresa a tu cuenta",
@@ -112,6 +117,7 @@
       "notFoundDescription": "La transacción que estás buscando no existe o ha sido eliminada.",
       "error": "Error al cargar la transacción",
       "errorDescription": "Ocurrió un error al intentar cargar los detalles de la transacción. Por favor, intenta nuevamente.",
+      "statusLabel": "Estado",
       "customer": {
         "title": "Información del Cliente",
         "name": "Nombre Completo",

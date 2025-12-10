@@ -1,9 +1,13 @@
 "use client"
 
+import { useTranslations } from "next-intl"
+
 export function Footer() {
+  const t = useTranslations("Layout.Footer")
+
   return (
     <footer className="bg-muted text-muted-foreground text-xs flex justify-center py-3 px-6">
-      © {new Date().getFullYear()} Nioki Studio
+      {t("copyright", { year: new Date().getFullYear() })}
     </footer>
   )
 }
