@@ -1,0 +1,117 @@
+# ============================================
+# Docker Ignore File
+# ============================================
+# Excludes files from Docker build context
+# This improves build speed and reduces image size
+
+# ============================================
+# Development Files
+# ============================================
+.git
+.gitignore
+.github
+.vscode
+.idea
+*.md
+!README.md
+
+# ============================================
+# Dependencies (will be installed in container)
+# ============================================
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================
+# Build Output (will be generated in container)
+# ============================================
+.next
+out
+dist
+build
+
+# ============================================
+# Environment Files
+# ============================================
+# Never include env files in Docker image
+# Use docker run -e or docker-compose environment instead
+.env
+.env.*
+!.env.example
+
+# ============================================
+# Testing & Coverage
+# ============================================
+coverage
+.nyc_output
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__
+__mocks__
+jest.config.*
+vitest.config.*
+
+# ============================================
+# Docker Files (not needed in build context)
+# ============================================
+Dockerfile
+.dockerignore
+docker-compose*.yml
+.docker
+
+# ============================================
+# CI/CD & Documentation
+# ============================================
+.circleci
+.gitlab-ci.yml
+.travis.yml
+.editorconfig
+CONTRIBUTING.md
+CHANGELOG.md
+LICENSE
+
+# ============================================
+# macOS & System Files
+# ============================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ============================================
+# Logs
+# ============================================
+logs
+*.log
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# ============================================
+# Temporary Files
+# ============================================
+tmp
+temp
+*.tmp
+*.swp
+*.swo
+*~
+
+# ============================================
+# TypeScript Cache
+# ============================================
+*.tsbuildinfo
+
+# ============================================
+# Biome Cache
+# ============================================
+.biome
+
+# ============================================
+# Plan Files (Claude Code)
+# ============================================
+.claude
