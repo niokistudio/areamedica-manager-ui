@@ -67,11 +67,11 @@ export function useTransactions(
   }
 
   if (fromDate) {
-    queryParams.from_date = fromDate
+    queryParams.start_date = fromDate
   }
 
   if (toDate) {
-    queryParams.to_date = toDate
+    queryParams.end_date = toDate
   }
 
   // Build SWR key with full query string
