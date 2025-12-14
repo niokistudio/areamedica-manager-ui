@@ -6,13 +6,8 @@ import { type APIError, APIErrorCode } from "@/types/api"
 /**
  * Base fetch configuration
  */
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || ""
 
-if (!API_BASE_URL) {
-  throw new Error(
-    "NEXT_PUBLIC_API_BASE_URL environment variable is not defined",
-  )
-}
 
 /**
  * Fetch options type
@@ -32,6 +27,12 @@ async function baseFetch<T>(
 
   // Get token from parameter or cookies
   const authToken = token || (await getAccessToken())
+
+  if (!API_BASE_URL) {
+    throw new Error(
+      "NEXT_PUBLIC_API_BASE_URL environment variable is not defined",
+    )
+  }
 
   // Build headers
   const fetchHeaders: HeadersInit = {
