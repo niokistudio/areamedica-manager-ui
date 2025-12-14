@@ -4,7 +4,7 @@ import { useCallback } from "react"
 import { Button } from "@/components/ui/Button"
 import { useReceiptPrint } from "@/hooks/useReceiptPrint"
 import { type Transaction, TransactionStatus } from "@/types/transactions"
-import { formatDate } from "@/utils/dates"
+import { formatDate, mergeDateAndTime } from "@/utils/dates"
 
 interface TransactionDetailsInfoProps {
   transaction: Transaction
@@ -57,10 +57,12 @@ export function TransactionDetailsInfo({
               {t("info.createdAt")}
             </p>
             <p className="text-base font-medium">
-              {formatDate(transaction.details.trnDate, "es-VE", {
-                dateStyle: "medium",
-                timeStyle: "short",
-              })}
+              {formatDate(
+                mergeDateAndTime(
+                  transaction.details.trnDate,
+                  transaction.details.trnTime,
+                ),
+              )}
             </p>
           </div>
         )}
@@ -69,10 +71,7 @@ export function TransactionDetailsInfo({
         <div>
           <p className="text-sm text-muted-foreground">{t("info.updatedAt")}</p>
           <p className="text-base font-medium">
-            {formatDate(transaction.updated_at, "es-VE", {
-              dateStyle: "medium",
-              timeStyle: "short",
-            })}
+            {formatDate(transaction.updated_at)}
           </p>
         </div>
 

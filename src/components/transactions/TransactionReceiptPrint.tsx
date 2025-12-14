@@ -4,7 +4,7 @@ import { useMemo } from "react"
 import Logo from "@/assets/logo/logo-areamedica.svg"
 import { statusColorMap, statusIconMap } from "@/constants/transactions"
 import type { Transaction } from "@/types/transactions"
-import { formatDate } from "@/utils/dates"
+import { formatDate, mergeDateAndTime } from "@/utils/dates"
 import { formatDocument } from "@/utils/document"
 import { formatCurrency } from "@/utils/numbers"
 
@@ -128,7 +128,12 @@ export function TransactionReceiptPrint({
                 {tInfo("createdAt")}
               </p>
               <p className="text-base font-medium text-foreground">
-                {formatDate(transaction.details.trnDate)}
+                {formatDate(
+                  mergeDateAndTime(
+                    transaction.details.trnDate,
+                    transaction.details.trnTime,
+                  ),
+                )}
               </p>
             </div>
           )}

@@ -1,4 +1,24 @@
 /**
+ * Merge separate date and time strings into a single ISO 8601 date-time string
+ *
+ * @param date - Date string in YYYY-MM-DD format
+ * @param time - Time string in HH:mm:ss format (optional)
+ * @returns ISO 8601 date-time string
+ *
+ * @example
+ * mergeDateAndTime("2024-01-15", "10:30:00")
+ * // Returns: "2024-01-15T10:30:00"
+ *
+ * @example
+ * mergeDateAndTime("2024-01-15")
+ * // Returns: "2024-01-15T00:00:00"
+ */
+export function mergeDateAndTime(date: string, time?: string): string {
+  const timeComponent = time || "00:00:00"
+  return `${date}T${timeComponent}`
+}
+
+/**
  * Format a date string to a localized format
  *
  * @param dateString - ISO date string to format
