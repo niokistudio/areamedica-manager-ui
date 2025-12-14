@@ -162,7 +162,7 @@
       "COMPLETED": "Completada",
       "CANCELED": "Cancelada",
       "UNKNOWN": "Desconocida",
-      "TO_REVIEW": "Por revisar"
+      "TO_REVIEW": "Pendiente"
     },
     "DocumentPrefix": {
       "V": "V - Venezolano",

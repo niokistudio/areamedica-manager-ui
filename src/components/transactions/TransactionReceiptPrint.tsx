@@ -57,8 +57,8 @@ export function TransactionReceiptPrint({
           <Chip
             color={statusColorMap[transaction.status]}
             startContent={<StatusIcon className="size-5" />}
-            classNames={{ content: "font-semibold" }}
-            className="receipt-print-color px-4"
+            classNames={{ content: "font-semibold px-0" }}
+            className="receipt-print-color px-4 gap-2"
             variant="flat"
             size="lg"
           >
