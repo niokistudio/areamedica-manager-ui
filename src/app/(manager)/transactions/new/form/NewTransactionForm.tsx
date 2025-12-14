@@ -47,14 +47,18 @@ export function NewTransactionForm({ transaction }: NewTransactionFormProps) {
           title: t("success"),
           severity: "success",
         })
-        console.log("Transaction response:", response.data)
         router.push(routes.transactionDetail(response.data.id))
       } catch (error) {
         const apiError = error as APIError
+        const isAlreadyInUse = apiError.status === 422
+        const errorMessage = isAlreadyInUse
+          ? t("duplicateReference")
+          : apiError.message || t("error")
         addToast({
-          title: apiError.message || t("error"),
+          title: errorMessage,
           severity: "danger",
           color: "danger",
+          timeout: isAlreadyInUse ? Infinity : undefined,
         })
       } finally {
         setIsLoading(false)

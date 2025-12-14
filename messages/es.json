@@ -52,7 +52,8 @@
         "submit": "Consultar",
         "submitting": "Consultando...",
         "success": "Transacción consultada exitosamente",
-        "error": "Error al consultar la transacción"
+        "error": "Error al consultar la transacción",
+        "duplicateReference": "Esta referencia ya está en uso o ya fue consultada anteriormente"
       }
     },
     "toolbar": {

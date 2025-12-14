@@ -76,7 +76,6 @@ axiosClient.interceptors.response.use(
         // Retry original request with new token
         return axiosClient(originalRequest)
       } catch (refreshError) {
-        console.log("refresh error", refreshError)
         // Refresh failed, clear tokens and SWR cache
         removeAccessToken()
 
