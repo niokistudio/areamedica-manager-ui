@@ -11,6 +11,11 @@ export enum TransactionType {
   MobilePayment = "MOBILE_PAYMENT",
 }
 
+enum TransactionsDetailsType {
+  Credit = "CR",
+  Debit = "DB",
+}
+
 export interface TransactionDetails {
   referenceNumber: string // Internal reference number
   amount: number // Transaction amount
@@ -23,7 +28,7 @@ export interface TransactionDetails {
   destBankId?: string // Destination bank identifier
   concept?: string // Transaction concept/description
   customerIdBen?: string // Beneficiary customer ID
-  trnType?: string // Transaction type code (e.g., "CR", "DB")
+  trnType?: TransactionsDetailsType // Transaction type code (e.g., "CR", "DB")
 }
 
 export interface Transaction {
