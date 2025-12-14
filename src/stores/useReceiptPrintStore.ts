@@ -1,16 +1,16 @@
 import { create } from "zustand"
-import type { ITransaction } from "@/types/transactions"
+import type { Transaction } from "@/types/transactions"
 
 interface ReceiptPrintState {
   isOpen: boolean
-  transaction: ITransaction | null
+  transaction: Transaction | null
 }
 
 interface ReceiptPrintActions {
   /**
    * Open the receipt modal with the given transaction
    */
-  openModal: (transaction: ITransaction) => void
+  openModal: (transaction: Transaction) => void
 
   /**
    * Close the receipt modal
@@ -28,7 +28,7 @@ const initialState: ReceiptPrintState = {
 export const useReceiptPrintStore = create<ReceiptPrintStore>((set) => ({
   ...initialState,
 
-  openModal: (transaction: ITransaction) => {
+  openModal: (transaction: Transaction) => {
     set({
       isOpen: true,
       transaction,

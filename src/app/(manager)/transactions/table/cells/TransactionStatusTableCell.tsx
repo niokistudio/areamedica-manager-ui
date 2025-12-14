@@ -27,7 +27,7 @@ export function TransactionStatusTableCell({
             <Icon
               className={cn(
                 "size-4",
-                status === TransactionStatus.IN_PROGRESS &&
+                status === TransactionStatus.InProgress &&
                   "animate-spinner-linear-spin",
               )}
             />
