@@ -192,5 +192,9 @@
         "disclaimer": "Este comprobante es válido como constancia de transacción"
       }
     }
+  },
+  "ManagerHeader": {
+    "userMenu": "Menú de usuario",
+    "logout": "Cerrar sesión"
   }
 }
