@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation"
 import type { ReactNode } from "react"
 import { useEffect } from "react"
 import { routes } from "@/constants/routes"
-import { useAuth } from "@/hooks/use-auth"
+import { useUser } from "@/hooks/use-user"
 
 interface ClientAuthGuardProps {
   children: ReactNode
@@ -18,7 +18,9 @@ interface ClientAuthGuardProps {
 export function ClientAuthGuard({ children }: ClientAuthGuardProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const { isAuthenticated, isLoading } = useAuth()
+  const { data, error, isLoading } = useUser()
+
+  const isAuthenticated = !!data && !error
 
   useEffect(() => {
     // Don't redirect while loading the initial auth state

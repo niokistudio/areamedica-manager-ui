@@ -1,10 +1,9 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import type { ReactNode } from "react"
-import { useEffect } from "react"
+import { type ReactNode, useEffect, useState } from "react"
 import { routes } from "@/constants/routes"
-import { useAuth } from "@/hooks/use-auth"
+import { hasAccessToken } from "@/lib/tokens/client"
 
 interface ClientGuestGuardProps {
   children: ReactNode
@@ -17,22 +16,23 @@ interface ClientGuestGuardProps {
  */
 export function ClientGuestGuard({ children }: ClientGuestGuardProps) {
   const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuth()
+  const [isChecking, setIsChecking] = useState(true)
 
   useEffect(() => {
-    // Don't redirect while loading the initial auth state
-    if (isLoading) {
-      return
-    }
+    // Check if the user has an access token
+    const isAuthenticated = hasAccessToken()
 
-    // If the user is authenticated, redirect to the transaction page
     if (isAuthenticated) {
+      // If the user is authenticated, redirect to the transaction page
       router.push(routes.transactions)
+    } else {
+      // User is not authenticated, allow rendering
+      setIsChecking(false)
     }
-  }, [isAuthenticated, isLoading, router])
+  }, [router])
 
-  // Show nothing while loading or redirecting
-  if (isLoading || isAuthenticated) {
+  // Show nothing while checking authentication or redirecting
+  if (isChecking) {
     return null
   }
 

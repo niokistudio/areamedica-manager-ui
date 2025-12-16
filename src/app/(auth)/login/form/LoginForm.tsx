@@ -2,6 +2,7 @@
 
 import { addToast } from "@heroui/toast"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { useCallback, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -11,13 +12,14 @@ import {
   loginFormDefaultValues,
   useLoginFormSchema,
 } from "@/app/(auth)/login/form/use-login-form-schema"
-import { useAuth } from "@/hooks/use-auth"
+import { routes } from "@/constants/routes"
+import { loginUser } from "@/services/auth.client"
 import type { APIError } from "@/types/api"
 
 export function LoginForm() {
   const t = useTranslations("Auth.LoginPage")
   const schema = useLoginFormSchema()
-  const { login } = useAuth()
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const { handleSubmit, ...methods } = useForm({
@@ -29,12 +31,14 @@ export function LoginForm() {
     async (form: ILoginForm) => {
       setIsLoading(true)
       try {
-        await login({ email: form.email, password: form.password })
+        await loginUser({ email: form.email, password: form.password })
         // AuthProvider handles redirect to /transactions
         addToast({
           title: t("success"),
           severity: "success",
         })
+        // Redirect to manager page
+        router.push(routes.transactions)
       } catch (error) {
         const apiError = error as APIError
         addToast({
@@ -46,7 +50,7 @@ export function LoginForm() {
         setIsLoading(false)
       }
     },
-    [login, t],
+    [t, router],
   )
 
   return (

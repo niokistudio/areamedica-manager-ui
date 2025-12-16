@@ -9,9 +9,15 @@ import {
   DropdownTrigger,
 } from "@heroui/dropdown"
 import { LogOut, User } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { useCallback, useMemo } from "react"
-import { useAuth } from "@/hooks/use-auth"
+import { mutate } from "swr"
+import { apiRoutes } from "@/constants/api-routes"
+import { routes } from "@/constants/routes"
+import { useUser } from "@/hooks/use-user"
+import { removeAccessToken } from "@/lib/tokens/client"
+import { logoutUser } from "@/services/auth.client"
 
 /**
  * User Avatar Dropdown Component
@@ -19,11 +25,24 @@ import { useAuth } from "@/hooks/use-auth"
  */
 export function UserAvatarDropdown() {
   const t = useTranslations("ManagerHeader")
-  const { user, logout } = useAuth()
+  const { data: user } = useUser()
+  const router = useRouter()
 
   const handleLogout = useCallback(async () => {
-    await logout()
-  }, [logout])
+    try {
+      // Call the logout API route to clear cookies
+      await logoutUser()
+    } finally {
+      // Always clear client-side token
+      removeAccessToken()
+
+      // Clear user from SWR cache
+      await mutate(apiRoutes.userInfo, undefined, false)
+
+      // Redirect to login page
+      router.push(routes.login)
+    }
+  }, [router])
 
   // Get user initials from full name
   const userInitials = useMemo(() => {
