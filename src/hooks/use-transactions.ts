@@ -1,6 +1,5 @@
 import useSWR from "swr"
 import { apiRoutes } from "@/constants/api-routes"
-import { hasAccessToken } from "@/lib/tokens/client"
 import type { APIError, PaginatedResponse } from "@/types/api"
 import type { Transaction } from "@/types/transactions"
 
@@ -77,9 +76,7 @@ export function useTransactions(
   // Build SWR key with full query string
   // SWR caches based on the key, so different params = different cache entry
   const queryString = new URLSearchParams(queryParams).toString()
-  const key = hasAccessToken()
-    ? `${apiRoutes.transactions}?${queryString}`
-    : null
+  const key = `${apiRoutes.transactions}?${queryString}`
 
   // Fetch data with SWR
   const { data, error, isLoading, mutate } = useSWR<

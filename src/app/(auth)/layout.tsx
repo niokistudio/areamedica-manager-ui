@@ -3,7 +3,6 @@ import { AuthHeader } from "@/app/(auth)/components/AuthHeader"
 import { ClientGuestGuard } from "@/components/guards/ClientGuestGuard"
 import { GuestGuard } from "@/components/guards/GuestGuard"
 import { Footer } from "@/components/layout/Footer"
-import { TransactionReceiptModal } from "@/components/transactions/TransactionReceiptModal"
 
 export default function AuthLayout({
   children,
@@ -20,7 +19,6 @@ export default function AuthLayout({
           </div>
           <Footer />
         </div>
-        <TransactionReceiptModal />
       </ClientGuestGuard>
     </GuestGuard>
   )

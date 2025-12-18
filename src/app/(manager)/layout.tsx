@@ -3,6 +3,7 @@ import { ManagerHeader } from "@/app/(manager)/components/ManagerHeader"
 import { AuthGuard } from "@/components/guards/AuthGuard"
 import { ClientAuthGuard } from "@/components/guards/ClientAuthGuard"
 import { Footer } from "@/components/layout/Footer"
+import { TransactionReceiptModal } from "@/components/transactions/TransactionReceiptModal"
 
 export default async function AuthLayout({
   children,
@@ -19,6 +20,7 @@ export default async function AuthLayout({
           </main>
           <Footer />
         </div>
+        <TransactionReceiptModal />
       </ClientAuthGuard>
     </AuthGuard>
   )
