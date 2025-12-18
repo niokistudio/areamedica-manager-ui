@@ -9,8 +9,8 @@ import {
   DropdownTrigger,
 } from "@heroui/dropdown"
 import { LogOut, User } from "lucide-react"
-import { signOut, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { signOut, useSession } from "next-auth/react"
 import { useTranslations } from "next-intl"
 import { useCallback, useMemo } from "react"
 import { routes } from "@/constants/routes"
