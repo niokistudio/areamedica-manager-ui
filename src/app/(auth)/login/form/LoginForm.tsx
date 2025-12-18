@@ -2,7 +2,8 @@
 
 import { addToast } from "@heroui/toast"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+import { signIn } from "next-auth/react"
 import { useTranslations } from "next-intl"
 import { useCallback, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -13,13 +14,12 @@ import {
   useLoginFormSchema,
 } from "@/app/(auth)/login/form/use-login-form-schema"
 import { routes } from "@/constants/routes"
-import { loginUser } from "@/services/auth.client"
-import type { APIError } from "@/types/api"
 
 export function LoginForm() {
   const t = useTranslations("Auth.LoginPage")
   const schema = useLoginFormSchema()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = useState(false)
 
   const { handleSubmit, ...methods } = useForm({
@@ -31,18 +31,29 @@ export function LoginForm() {
     async (form: ILoginForm) => {
       setIsLoading(true)
       try {
-        await loginUser({ email: form.email, password: form.password })
-        // AuthProvider handles redirect to /transactions
-        addToast({
-          title: t("success"),
-          severity: "success",
+        const result = await signIn("credentials", {
+          email: form.email,
+          password: form.password,
+          redirect: false,
         })
-        // Redirect to manager page
-        router.push(routes.transactions)
+
+        if (result?.error) {
+          addToast({
+            title: t("error"),
+            severity: "danger",
+            color: "danger",
+          })
+          return
+        }
+
+        // Redirect to the page user was trying to access, or transactions
+        const redirectTo = searchParams.get("redirect") || routes.transactions
+        router.push(redirectTo)
+        router.refresh() // Refresh server components
       } catch (error) {
-        const apiError = error as APIError
+        console.error("Login error:", error)
         addToast({
-          title: apiError.message || t("error"),
+          title: t("error"),
           severity: "danger",
           color: "danger",
         })
@@ -50,7 +61,7 @@ export function LoginForm() {
         setIsLoading(false)
       }
     },
-    [t, router],
+    [t, router, searchParams],
   )
 
   return (

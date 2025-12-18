@@ -1,7 +1,7 @@
-import type { output } from "zod"
-import type { LoginRequestSchema } from "@/app/api/auth/login/login.schema"
-
-export type LoginRequest = output<typeof LoginRequestSchema>
+export interface LoginRequest {
+  email: string
+  password: string
+}
 
 export interface AuthResponse {
   access_token: string

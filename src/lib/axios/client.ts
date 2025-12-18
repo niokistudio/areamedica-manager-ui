@@ -1,12 +1,5 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios"
-import { mutate } from "swr"
-import { apiRoutes } from "@/constants/api-routes"
-import {
-  getAccessToken,
-  removeAccessToken,
-  setAccessToken,
-} from "@/lib/tokens/client"
-import { refreshToken } from "@/services/auth.client"
+import { getSession } from "next-auth/react"
 import { type APIError, APIErrorCode, type BackendError } from "@/types/api"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api"
@@ -19,19 +12,21 @@ export const axiosClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // Send cookies with requests (for refresh token)
 })
 
 /**
  * Request interceptor
- * Adds authentication token to requests
+ * Adds authentication token from Auth.js session to requests
  */
 axiosClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = getAccessToken()
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`
+  async (config: InternalAxiosRequestConfig) => {
+    // Get session from Auth.js
+    const session = await getSession()
+
+    if (session?.accessToken && config.headers) {
+      config.headers.Authorization = `Bearer ${session.accessToken}`
     }
+
     return config
   },
   (error) => {
@@ -41,7 +36,8 @@ axiosClient.interceptors.request.use(
 
 /**
  * Response interceptor
- * Handles token refresh on 401 errors
+ * Handles errors and transforms to consistent format
+ * Note: Token refresh is handled automatically by Auth.js JWT callback
  */
 axiosClient.interceptors.response.use(
   (response) => {
@@ -49,40 +45,16 @@ axiosClient.interceptors.response.use(
     return response
   },
   async (error: AxiosError<BackendError | APIError>) => {
-    const originalRequest = error.config
-
-    // If the error is 401, and we haven't retried yet, attempt token refresh
-    if (
-      error.response?.status === 401 &&
-      originalRequest &&
-      !originalRequest.headers?.["X-Retry"]
-    ) {
-      try {
-        // Call refresh API route (refresh token sent via HTTP-only cookie)
-        const { access_token: accessToken } = await refreshToken()
-
-        // Store new access token
-        setAccessToken(accessToken)
-
-        // Trigger user revalidation to update auth state
-        // This ensures the client guards detect the auth state change
-        mutate(apiRoutes.userInfo)
-
-        // Mark request as retried to prevent infinite loops
-        originalRequest.headers = originalRequest.headers || {}
-        originalRequest.headers["X-Retry"] = "true"
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`
-
-        // Retry original request with new token
-        return axiosClient(originalRequest)
-      } catch (refreshError) {
-        // Refresh failed, clear tokens and SWR cache
-        removeAccessToken()
-
-        // Clear the user from SWR cache to trigger auth state change
-        await mutate(apiRoutes.userInfo, undefined, false)
-
-        return Promise.reject(refreshError)
+    // If 401, session has expired or is invalid
+    // Auth.js will handle refresh automatically on next request
+    // Client should redirect to login if refresh fails
+    if (error.response?.status === 401) {
+      // Check if session has refresh error
+      const session = await getSession()
+      if (session?.error === "RefreshAccessTokenError") {
+        // Session refresh failed, user needs to re-login
+        // Redirect will be handled by middleware or components
+        console.error("Session expired, please login again")
       }
     }
 

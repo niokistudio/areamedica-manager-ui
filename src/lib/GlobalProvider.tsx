@@ -1,3 +1,4 @@
+import { SessionProvider } from "next-auth/react"
 import { NextIntlClientProvider } from "next-intl"
 import type { ReactNode } from "react"
 import { ConfirmDialog } from "@/components/ConfirmDialog"
@@ -10,13 +11,15 @@ export interface GlobalProviderProps {
 
 export default function GlobalProvider({ children }: GlobalProviderProps) {
   return (
-    <NextIntlClientProvider>
-      <HeroUIClientProvider>
-        <SWRClientProvider>
-          {children}
-          <ConfirmDialog />
-        </SWRClientProvider>
-      </HeroUIClientProvider>
-    </NextIntlClientProvider>
+    <SessionProvider>
+      <NextIntlClientProvider>
+        <HeroUIClientProvider>
+          <SWRClientProvider>
+            {children}
+            <ConfirmDialog />
+          </SWRClientProvider>
+        </HeroUIClientProvider>
+      </NextIntlClientProvider>
+    </SessionProvider>
   )
 }

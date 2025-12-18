@@ -1,22 +1,23 @@
-import useSWR from "swr"
-import { apiRoutes } from "@/constants/api-routes"
-import { hasAccessToken } from "@/lib/tokens/client"
-import type { APIError } from "@/types/api"
+"use client"
+
+import { useSession } from "next-auth/react"
 import type { User } from "@/types/user"
 
+/**
+ * Hook to get current user from Auth.js session
+ * Client-side only
+ *
+ * @returns User object, loading state, and error
+ */
 export function useUser() {
-  return useSWR<User, APIError>(
-    // Only fetch if we have an access token
-    hasAccessToken() ? apiRoutes.userInfo : null,
-    {
-      // Don't revalidate on window focus for auth
-      revalidateOnFocus: false,
-      // Don't revalidate on reconnect
-      revalidateOnReconnect: false,
-      // Don't retry on 401 (user not authenticated)
-      shouldRetryOnError: (error: APIError) => error.status !== 401,
-      // Dedupe requests within 5 seconds
-      dedupingInterval: 5000,
-    },
-  )
+  const { data: session, status } = useSession()
+
+  return {
+    data: session?.user as User | undefined,
+    isLoading: status === "loading",
+    error:
+      session?.error === "RefreshAccessTokenError"
+        ? { message: "Session expired", status: 401, code: "UNAUTHORIZED" }
+        : undefined,
+  }
 }

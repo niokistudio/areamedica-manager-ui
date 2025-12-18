@@ -1,13 +1,12 @@
 "use server"
 
-import { getAccessToken } from "@/lib/tokens/server"
+import { getAccessToken } from "@/lib/auth/session"
 import { type APIError, APIErrorCode } from "@/types/api"
 
 /**
  * Base fetch configuration
  */
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || ""
-
 
 /**
  * Fetch options type
@@ -18,6 +17,7 @@ interface FetchOptions extends RequestInit {
 
 /**
  * Base fetch function with error handling
+ * Uses Auth.js session token by default
  */
 async function baseFetch<T>(
   endpoint: string,
@@ -25,7 +25,7 @@ async function baseFetch<T>(
 ): Promise<T> {
   const { token, headers, ...restOptions } = options
 
-  // Get token from parameter or cookies
+  // Get token from parameter or Auth.js session
   const authToken = token || (await getAccessToken())
 
   if (!API_BASE_URL) {
