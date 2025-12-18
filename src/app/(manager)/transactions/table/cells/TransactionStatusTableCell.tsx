@@ -1,5 +1,4 @@
 import { Chip } from "@heroui/chip"
-import { cn } from "@heroui/theme"
 import { useTranslations } from "next-intl"
 import { DefaultTableCell } from "@/components/ui/table-cells/DefaultTableCell"
 import { statusColorMap, statusIconMap } from "@/constants/transactions"
