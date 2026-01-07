@@ -50,10 +50,17 @@ const columnRenderers: Partial<
     <TransactionActionsTableCell transaction={transaction} />
   ),
   reference: (transaction) => (
-    <DefaultTableCell className="break-keep text-nowrap">
+    <DefaultTableCell
+      className="break-keep text-nowrap"
+      onClick={(event) => {
+        event.preventDefault()
+        event.stopPropagation()
+      }}
+    >
       <Link
         href={routes.transactionDetail(transaction.id)}
         className="text-primary hover:underline underline-offset-2"
+        onClick={(event) => event.stopPropagation()}
       >
         {transaction.reference}
       </Link>

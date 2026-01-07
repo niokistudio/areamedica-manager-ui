@@ -1,11 +1,8 @@
 import { cn } from "@heroui/theme"
-import type { ReactNode } from "react"
+import type { ComponentPropsWithoutRef } from "react"
 
-interface TableCellProps {
-  className?: string
-  children: ReactNode
-}
+type TableCellProps = ComponentPropsWithoutRef<'span'>
 
-export function DefaultTableCell({ className, children }: TableCellProps) {
-  return <span className={cn("text-xs", className)}>{children}</span>
+export function DefaultTableCell({ className, children, ...props }: TableCellProps) {
+  return <span className={cn("text-xs", className)} {...props}>{children}</span>
 }
