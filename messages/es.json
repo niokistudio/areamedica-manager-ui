@@ -58,7 +58,7 @@
     },
     "toolbar": {
       "filters": {
-        "searchPlaceholder": "Buscar transacciones",
+        "searchPlaceholder": "Buscar por nombre o referencia",
         "dateRange": "Rango de fechas",
         "popoverTitle": "Filtros",
         "popoverTrigger": "Aplicar filtros",
@@ -160,8 +160,8 @@
     },
     "TransactionStatus": {
       "IN_PROGRESS": "Pendiente",
-      "COMPLETED": "Completada",
-      "CANCELED": "Cancelada",
+      "COMPLETED": "Verificada",
+      "CANCELED": "Rechazada",
       "UNKNOWN": "Desconocida",
       "TO_REVIEW": "Pendiente"
     },

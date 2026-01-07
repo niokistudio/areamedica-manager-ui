@@ -48,7 +48,7 @@ export function SearchFilter() {
 
   return (
     <Input
-      className="max-w-xs"
+      className="max-w-xs min-w-2xs"
       placeholder={t("searchPlaceholder")}
       endContent={
         <Button size="sm" variant="light" isIconOnly onPress={handleSearch}>
