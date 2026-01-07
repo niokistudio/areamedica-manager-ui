@@ -6,8 +6,8 @@ import { SlidersHorizontal } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useCallback, useState } from "react"
 import { Button } from "@/components/ui/Button"
+import type { TransactionStatusFilter } from "@/constants/transactions"
 import { usePaginationParams } from "@/hooks/use-pagination-params"
-import type { TransactionStatus } from "@/types/transactions"
 import { FiltersForm } from "./FiltersForm"
 
 /**
@@ -28,7 +28,7 @@ import { FiltersForm } from "./FiltersForm"
 export function FiltersPopover() {
   const t = useTranslations("TransactionsPage.toolbar.filters")
   const [isOpen, setIsOpen] = useState(false)
-  const { fromDate, toDate, status, setDateRange, setStatus, resetFilters } =
+  const { fromDate, toDate, status, updateParams, resetFilters } =
     usePaginationParams()
 
   // Calculate active filter count
@@ -39,13 +39,18 @@ export function FiltersPopover() {
     (filters: {
       fromDate: string | null
       toDate: string | null
-      status: TransactionStatus | null
+      status: TransactionStatusFilter | null
     }) => {
-      setDateRange(filters.fromDate, filters.toDate)
-      setStatus(filters.status)
+      // Update all filters at once to avoid race condition
+      updateParams({
+        fromDate: filters.fromDate,
+        toDate: filters.toDate,
+        status: filters.status,
+        page: 1,
+      })
       setIsOpen(false)
     },
-    [setDateRange, setStatus],
+    [updateParams],
   )
 
   // Handle Reset - clear all filters and close popover

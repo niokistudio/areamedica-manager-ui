@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl"
 import { useCallback, useEffect, useState } from "react"
 import { Button } from "@/components/ui/Button"
-import type { TransactionStatus } from "@/types/transactions"
+import type { TransactionStatusFilter } from "@/constants/transactions"
 import { DateRangeFilterField } from "./DateRangeFilterField"
 import { StatusFilterField } from "./StatusFilterField"
 
@@ -11,7 +11,7 @@ interface FiltersFormProps {
   initialValues: {
     fromDate: string | null
     toDate: string | null
-    status: TransactionStatus | null
+    status: TransactionStatusFilter | null
   }
   onApply: (filters: FiltersFormProps["initialValues"]) => void
   onReset: () => void
@@ -66,7 +66,7 @@ export function FiltersForm({
 
   // Handle status change
   const handleStatusChange = useCallback(
-    (newStatus: TransactionStatus | null) => {
+    (newStatus: TransactionStatusFilter | null) => {
       setPendingFilters((prev) => ({ ...prev, status: newStatus }))
     },
     [],

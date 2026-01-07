@@ -1,7 +1,11 @@
 import useSWR from "swr"
 import { apiRoutes } from "@/constants/api-routes"
+import {
+  filterToStatusMap,
+  type TransactionStatusFilter,
+} from "@/constants/transactions"
 import type { APIError, PaginatedResponse } from "@/types/api"
-import type { Transaction, TransactionStatus } from "@/types/transactions"
+import type { Transaction } from "@/types/transactions"
 
 export interface UseTransactionsParams {
   page?: number
@@ -9,7 +13,7 @@ export interface UseTransactionsParams {
   search?: string
   fromDate?: string | null
   toDate?: string | null
-  status?: TransactionStatus | null
+  status?: TransactionStatusFilter | null
 }
 
 export interface UseTransactionsReturn {
@@ -38,7 +42,7 @@ const TRANSACTIONS_PER_PAGE = 10
  *   search: 'test',
  *   fromDate: '2024-01-01',
  *   toDate: '2024-12-31',
- *   status: TransactionStatus.InProgress,
+ *   status: TransactionStatusFilter.Pending,
  * })
  * ```
  */
@@ -57,7 +61,7 @@ export function useTransactions(
   // Calculate offset for backend API
   const offset = (page - 1) * limit
 
-  // Build query parameters
+  // Build query parameters (without status first)
   const queryParams: Record<string, string> = {
     offset: String(offset),
     limit: String(limit),
@@ -76,13 +80,20 @@ export function useTransactions(
     queryParams.end_date = toDate
   }
 
+  // Build URLSearchParams to handle multiple status values
+  const searchParams = new URLSearchParams(queryParams)
+
+  // Add status filter as array (map TransactionStatusFilter to TransactionStatus[])
   if (status) {
-    queryParams.status = status
+    const statusValues = filterToStatusMap[status]
+    for (const statusValue of statusValues) {
+      searchParams.append("status", statusValue)
+    }
   }
 
   // Build SWR key with full query string
   // SWR caches based on the key, so different params = different cache entry
-  const queryString = new URLSearchParams(queryParams).toString()
+  const queryString = searchParams.toString()
   const key = `${apiRoutes.transactions}?${queryString}`
 
   // Fetch data with SWR

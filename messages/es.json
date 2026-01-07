@@ -152,6 +152,11 @@
       "UNKNOWN": "Desconocida",
       "TO_REVIEW": "Pendiente"
     },
+    "TransactionStatusFilter": {
+      "verified": "Verificada",
+      "pending": "Pendiente",
+      "rejected": "Rechazada"
+    },
     "DocumentPrefix": {
       "V": "V - Venezolano",
       "E": "E - Extranjero",

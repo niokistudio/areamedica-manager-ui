@@ -4,12 +4,15 @@ import { Chip } from "@heroui/chip"
 import { Select, SelectItem } from "@heroui/select"
 import { useTranslations } from "next-intl"
 import { useCallback } from "react"
-import { statusColorMap, statusIconMap } from "@/constants/transactions"
-import { TransactionStatus } from "@/types/transactions"
+import {
+  filterColorMap,
+  filterIconMap,
+  TransactionStatusFilter,
+} from "@/constants/transactions"
 
 interface StatusFilterFieldProps {
-  value: TransactionStatus | null
-  onChange: (status: TransactionStatus | null) => void
+  value: TransactionStatusFilter | null
+  onChange: (status: TransactionStatusFilter | null) => void
   label?: string
 }
 
@@ -27,7 +30,7 @@ interface StatusFilterFieldProps {
  * @example
  * ```tsx
  * <StatusFilterField
- *   value={TransactionStatus.InProgress}
+ *   value={TransactionStatusFilter.Pending}
  *   onChange={(status) => setStatus(status)}
  * />
  * ```
@@ -44,7 +47,9 @@ export function StatusFilterField({
     (keys: "all" | Set<React.Key>) => {
       if (keys === "all") return
 
-      const selectedKey = Array.from(keys)[0] as TransactionStatus | undefined
+      const selectedKey = Array.from(keys)[0] as
+        | TransactionStatusFilter
+        | undefined
       onChange(selectedKey || null)
     },
     [onChange],
@@ -60,13 +65,13 @@ export function StatusFilterField({
         label: "text-sm font-medium",
       }}
     >
-      {Object.values(TransactionStatus).map((status) => {
-        const Icon = statusIconMap[status]
-        const color = statusColorMap[status]
+      {Object.values(TransactionStatusFilter).map((filter) => {
+        const Icon = filterIconMap[filter]
+        const color = filterColorMap[filter]
 
         return (
           <SelectItem
-            key={status}
+            key={filter}
             startContent={
               <div className="flex items-center gap-2">
                 <Chip
@@ -80,7 +85,7 @@ export function StatusFilterField({
               </div>
             }
           >
-            {t(`ITransactions.TransactionStatus.${status}`)}
+            {t(`ITransactions.TransactionStatusFilter.${filter}`)}
           </SelectItem>
         )
       })}

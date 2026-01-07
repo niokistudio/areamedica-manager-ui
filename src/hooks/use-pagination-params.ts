@@ -2,14 +2,14 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback } from "react"
-import { TransactionStatus } from "@/types/transactions"
+import { TransactionStatusFilter } from "@/constants/transactions"
 
 export interface PaginationParams {
   page: number
   search: string
   fromDate: string | null
   toDate: string | null
-  status: TransactionStatus | null
+  status: TransactionStatusFilter | null
 }
 
 export interface UsePaginationParamsOptions {
@@ -23,7 +23,7 @@ export interface UsePaginationParamsReturn extends PaginationParams {
   setDateRange: (from: string | null, to: string | null) => void
   setFromDate: (date: string | null) => void
   setToDate: (date: string | null) => void
-  setStatus: (status: TransactionStatus | null) => void
+  setStatus: (status: TransactionStatusFilter | null) => void
   resetFilters: () => void
   updateParams: (params: Partial<PaginationParams>) => void
 }
@@ -72,10 +72,10 @@ export function usePaginationParams(
   const fromDate = searchParams.get("from")
   const toDate = searchParams.get("to")
   const statusParam = searchParams.get("status")
-  const status = Object.values(TransactionStatus).includes(
-    statusParam as TransactionStatus,
+  const status = Object.values(TransactionStatusFilter).includes(
+    statusParam as TransactionStatusFilter,
   )
-    ? (statusParam as TransactionStatus)
+    ? (statusParam as TransactionStatusFilter)
     : null
 
   /**
@@ -194,7 +194,7 @@ export function usePaginationParams(
    * Set status filter (resets to page 1)
    */
   const setStatus = useCallback(
-    (newStatus: TransactionStatus | null) => {
+    (newStatus: TransactionStatusFilter | null) => {
       updateParams({ status: newStatus, page: initialPage })
     },
     [updateParams, initialPage],
