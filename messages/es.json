@@ -89,25 +89,11 @@
         "menu": "Menú de acciones",
         "openDetails": "Ver detalles",
         "download": "Descargar comprobante",
-        "edit": "Editar",
         "delete": "Eliminar",
         "deleteConfirmTitle": "Eliminar transacción",
         "deleteConfirmDescription": "¿Estás seguro de que deseas eliminar esta transacción? Esta acción no se puede deshacer.",
         "deleteSuccess": "Transacción eliminada exitosamente",
         "deleteError": "Error al eliminar la transacción"
-      }
-    },
-    "edit": {
-      "title": "Editar Transacción",
-      "backButton": "Volver",
-      "loading": "Cargando transacción",
-      "notFound": "Transacción no encontrada",
-      "notFoundDescription": "La transacción que estás buscando no existe o ha sido eliminada.",
-      "error": "Error al cargar la transacción",
-      "errorDescription": "Ocurrió un error al intentar cargar los detalles de la transacción. Por favor, intenta nuevamente.",
-      "card": {
-        "label": "Formulario de edición",
-        "description": "Modifique los datos de la transacción según sea necesario"
       }
     },
     "detail": {

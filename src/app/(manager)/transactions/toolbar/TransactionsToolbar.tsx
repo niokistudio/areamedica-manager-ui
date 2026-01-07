@@ -1,7 +1,6 @@
 "use client"
 
 import { TransactionsDeleteAction } from "@/app/(manager)/transactions/toolbar/actions/TransactionsDeleteAction"
-import { TransactionsEditAction } from "@/app/(manager)/transactions/toolbar/actions/TransactionsEditAction"
 import { FiltersPopover } from "@/app/(manager)/transactions/toolbar/filters/FiltersPopover"
 import { SearchFilter } from "@/app/(manager)/transactions/toolbar/filters/SearchFilter"
 import { useTransactionsStore } from "@/stores/useTransactionsStore"
@@ -17,7 +16,6 @@ export function TransactionsToolbar() {
       </div>
       {selectedKeys === "all" || selectedKeys.size ? (
         <div className="flex gap-2">
-          <TransactionsEditAction />
           <TransactionsDeleteAction />
         </div>
       ) : null}

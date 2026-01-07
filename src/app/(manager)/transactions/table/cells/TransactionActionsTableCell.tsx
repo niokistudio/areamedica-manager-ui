@@ -7,7 +7,7 @@ import {
 } from "@heroui/dropdown"
 import { addToast } from "@heroui/toast"
 import type { LucideIcon } from "lucide-react"
-import { Download, Ellipsis, Eye, Pencil, Trash2 } from "lucide-react"
+import { Download, Ellipsis, Eye, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useCallback, useMemo, useState } from "react"
 import { mutate } from "swr"
@@ -45,11 +45,6 @@ export function TransactionActionsTableCell({
 
   const detailsUrl = useMemo(
     () => routes.transactionDetail(transaction.id),
-    [transaction.id],
-  )
-
-  const editUrl = useMemo(
-    () => routes.transactionEdit(transaction.id),
     [transaction.id],
   )
 
@@ -107,16 +102,6 @@ export function TransactionActionsTableCell({
         href: detailsUrl,
       },
       {
-        key: "edit",
-        label: t("edit"),
-        icon: Pencil,
-        href: editUrl,
-        // Only show download action for processing transactions
-        isVisible: (transaction) =>
-          transaction.status === TransactionStatus.InProgress ||
-          transaction.status === TransactionStatus.ToReview,
-      },
-      {
         key: "download",
         label: t("download"),
         icon: Download,
@@ -135,7 +120,7 @@ export function TransactionActionsTableCell({
         isDisabled: isDeleting,
       },
     ],
-    [t, detailsUrl, editUrl, handleDownload, handleDelete, isDeleting],
+    [t, detailsUrl, handleDownload, handleDelete, isDeleting],
   )
 
   // Filter actions based on showWhen condition
