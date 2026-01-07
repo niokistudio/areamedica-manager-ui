@@ -13,7 +13,8 @@ import { useTransactionsStore } from "@/stores/useTransactionsStore"
 export function TransactionsPageContent() {
   const t = useTranslations("TransactionsPage")
   // Get pagination and filter state from URL params (single source of truth)
-  const { page, search, fromDate, toDate, setPage } = usePaginationParams()
+  const { page, search, fromDate, toDate, status, setPage } =
+    usePaginationParams()
 
   // Get selection state from store (UI-specific, not in URL)
   const selectedKeys = useTransactionsStore((state) => state.selectedKeys)
@@ -25,6 +26,7 @@ export function TransactionsPageContent() {
     search,
     fromDate,
     toDate,
+    status,
   })
 
   // Handle page change

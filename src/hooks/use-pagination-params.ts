@@ -2,12 +2,14 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback } from "react"
+import { TransactionStatus } from "@/types/transactions"
 
 export interface PaginationParams {
   page: number
   search: string
   fromDate: string | null
   toDate: string | null
+  status: TransactionStatus | null
 }
 
 export interface UsePaginationParamsOptions {
@@ -21,6 +23,7 @@ export interface UsePaginationParamsReturn extends PaginationParams {
   setDateRange: (from: string | null, to: string | null) => void
   setFromDate: (date: string | null) => void
   setToDate: (date: string | null) => void
+  setStatus: (status: TransactionStatus | null) => void
   resetFilters: () => void
   updateParams: (params: Partial<PaginationParams>) => void
 }
@@ -68,6 +71,12 @@ export function usePaginationParams(
   const search = searchParams.get("search") ?? initialSearch
   const fromDate = searchParams.get("from")
   const toDate = searchParams.get("to")
+  const statusParam = searchParams.get("status")
+  const status = Object.values(TransactionStatus).includes(
+    statusParam as TransactionStatus,
+  )
+    ? (statusParam as TransactionStatus)
+    : null
 
   /**
    * Update URL search params
@@ -109,6 +118,15 @@ export function usePaginationParams(
           params.set("to", updates.toDate)
         } else {
           params.delete("to")
+        }
+      }
+
+      // Handle status
+      if ("status" in updates) {
+        if (updates.status) {
+          params.set("status", updates.status)
+        } else {
+          params.delete("status")
         }
       }
 
@@ -173,6 +191,16 @@ export function usePaginationParams(
   )
 
   /**
+   * Set status filter (resets to page 1)
+   */
+  const setStatus = useCallback(
+    (newStatus: TransactionStatus | null) => {
+      updateParams({ status: newStatus, page: initialPage })
+    },
+    [updateParams, initialPage],
+  )
+
+  /**
    * Reset all filters to defaults
    */
   const resetFilters = useCallback(() => {
@@ -181,6 +209,7 @@ export function usePaginationParams(
       search: initialSearch,
       fromDate: null,
       toDate: null,
+      status: null,
     })
   }, [updateParams, initialPage, initialSearch])
 
@@ -190,6 +219,7 @@ export function usePaginationParams(
     search,
     fromDate,
     toDate,
+    status,
 
     // Setters
     setPage,
@@ -197,6 +227,7 @@ export function usePaginationParams(
     setDateRange,
     setFromDate,
     setToDate,
+    setStatus,
     resetFilters,
     updateParams,
   }

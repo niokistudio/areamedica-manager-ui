@@ -60,6 +60,7 @@
       "filters": {
         "searchPlaceholder": "Buscar por nombre o referencia",
         "dateRange": "Rango de fechas",
+        "status": "Estado",
         "popoverTitle": "Filtros",
         "popoverTrigger": "Aplicar filtros",
         "apply": "Aplicar",

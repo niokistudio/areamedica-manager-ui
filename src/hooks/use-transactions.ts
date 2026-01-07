@@ -1,7 +1,7 @@
 import useSWR from "swr"
 import { apiRoutes } from "@/constants/api-routes"
 import type { APIError, PaginatedResponse } from "@/types/api"
-import type { Transaction } from "@/types/transactions"
+import type { Transaction, TransactionStatus } from "@/types/transactions"
 
 export interface UseTransactionsParams {
   page?: number
@@ -9,6 +9,7 @@ export interface UseTransactionsParams {
   search?: string
   fromDate?: string | null
   toDate?: string | null
+  status?: TransactionStatus | null
 }
 
 export interface UseTransactionsReturn {
@@ -37,6 +38,7 @@ const TRANSACTIONS_PER_PAGE = 10
  *   search: 'test',
  *   fromDate: '2024-01-01',
  *   toDate: '2024-12-31',
+ *   status: TransactionStatus.InProgress,
  * })
  * ```
  */
@@ -49,6 +51,7 @@ export function useTransactions(
     search,
     fromDate,
     toDate,
+    status,
   } = params
 
   // Calculate offset for backend API
@@ -71,6 +74,10 @@ export function useTransactions(
 
   if (toDate) {
     queryParams.end_date = toDate
+  }
+
+  if (status) {
+    queryParams.status = status
   }
 
   // Build SWR key with full query string

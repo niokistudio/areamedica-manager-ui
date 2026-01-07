@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl"
 import { useCallback, useState } from "react"
 import { Button } from "@/components/ui/Button"
 import { usePaginationParams } from "@/hooks/use-pagination-params"
+import type { TransactionStatus } from "@/types/transactions"
 import { FiltersForm } from "./FiltersForm"
 
 /**
@@ -27,18 +28,24 @@ import { FiltersForm } from "./FiltersForm"
 export function FiltersPopover() {
   const t = useTranslations("TransactionsPage.toolbar.filters")
   const [isOpen, setIsOpen] = useState(false)
-  const { fromDate, toDate, setDateRange, resetFilters } = usePaginationParams()
+  const { fromDate, toDate, status, setDateRange, setStatus, resetFilters } =
+    usePaginationParams()
 
   // Calculate active filter count
-  const activeFilterCount = fromDate && toDate ? 1 : 0
+  const activeFilterCount = (fromDate && toDate ? 1 : 0) + (status ? 1 : 0)
 
   // Handle Apply - update URL params and close popover
   const handleApply = useCallback(
-    (filters: { fromDate: string | null; toDate: string | null }) => {
+    (filters: {
+      fromDate: string | null
+      toDate: string | null
+      status: TransactionStatus | null
+    }) => {
       setDateRange(filters.fromDate, filters.toDate)
+      setStatus(filters.status)
       setIsOpen(false)
     },
-    [setDateRange],
+    [setDateRange, setStatus],
   )
 
   // Handle Reset - clear all filters and close popover
@@ -67,7 +74,7 @@ export function FiltersPopover() {
       </Badge>
       <PopoverContent>
         <FiltersForm
-          initialValues={{ fromDate, toDate }}
+          initialValues={{ fromDate, toDate, status }}
           onApply={handleApply}
           onReset={handleReset}
           onCancel={handleCancel}

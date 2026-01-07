@@ -3,12 +3,15 @@
 import { useTranslations } from "next-intl"
 import { useCallback, useEffect, useState } from "react"
 import { Button } from "@/components/ui/Button"
+import type { TransactionStatus } from "@/types/transactions"
 import { DateRangeFilterField } from "./DateRangeFilterField"
+import { StatusFilterField } from "./StatusFilterField"
 
 interface FiltersFormProps {
   initialValues: {
     fromDate: string | null
     toDate: string | null
+    status: TransactionStatus | null
   }
   onApply: (filters: FiltersFormProps["initialValues"]) => void
   onReset: () => void
@@ -56,7 +59,15 @@ export function FiltersForm({
   // Handle date range change
   const handleDateRangeChange = useCallback(
     (from: string | null, to: string | null) => {
-      setPendingFilters({ fromDate: from, toDate: to })
+      setPendingFilters((prev) => ({ ...prev, fromDate: from, toDate: to }))
+    },
+    [],
+  )
+
+  // Handle status change
+  const handleStatusChange = useCallback(
+    (newStatus: TransactionStatus | null) => {
+      setPendingFilters((prev) => ({ ...prev, status: newStatus }))
     },
     [],
   )
@@ -69,6 +80,12 @@ export function FiltersForm({
       <DateRangeFilterField
         value={pendingFilters}
         onChange={handleDateRangeChange}
+      />
+
+      {/* Status Filter Field */}
+      <StatusFilterField
+        value={pendingFilters.status}
+        onChange={handleStatusChange}
       />
 
       {/* Action Buttons */}
