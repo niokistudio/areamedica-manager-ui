@@ -44,6 +44,10 @@
         "transactionSection": "Información de la Transacción",
         "bank": "Tipo de operación",
         "reference": "Número de referencia",
+        "referencePlaceholder": {
+          "transfer": "Ingrese los 12 dígitos de la referencia",
+          "mobilePayment": "Ingrese los últimos 6 dígitos"
+        },
         "name": "Nombre",
         "phone": "Teléfono",
         "documentPrefix": "Tipo de documento",
@@ -189,5 +193,8 @@
   "ManagerHeader": {
     "userMenu": "Menú de usuario",
     "logout": "Cerrar sesión"
+  },
+  "Common": {
+    "optional": "Opcional"
   }
 }

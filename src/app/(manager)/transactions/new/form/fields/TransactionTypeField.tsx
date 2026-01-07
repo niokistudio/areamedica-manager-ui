@@ -5,7 +5,7 @@ import type { INewTransactionForm } from "@/app/(manager)/transactions/new/form/
 import { SelectFormField } from "@/components/ui/form/SelectFormField"
 import { TransactionType } from "@/types/transactions"
 
-export function TransactionBankField() {
+export function TransactionTypeField() {
   const t = useTranslations()
   const { control } = useFormContext<INewTransactionForm>()
   const options = useMemo(

@@ -5,6 +5,7 @@ import {
   type FieldPath,
   type FieldValues,
 } from "react-hook-form"
+import { OptionalLabel } from "@/components/ui/form/OptionalLabel"
 import type { FormFieldOption } from "@/types/form"
 
 interface SelectFormFieldProps<TFieldValues extends FieldValues = FieldValues>
@@ -12,11 +13,18 @@ interface SelectFormFieldProps<TFieldValues extends FieldValues = FieldValues>
   name: FieldPath<TFieldValues>
   control: Control<TFieldValues>
   options: FormFieldOption[]
+  optional?: boolean
 }
 
 export function SelectFormField<
   TFieldValues extends FieldValues = FieldValues,
->({ name, control, options, ...props }: SelectFormFieldProps<TFieldValues>) {
+>({
+  name,
+  control,
+  options,
+  optional,
+  ...props
+}: SelectFormFieldProps<TFieldValues>) {
   return (
     <Controller
       name={name}
@@ -31,6 +39,13 @@ export function SelectFormField<
           defaultSelectedKeys={field.value ? [field.value] : undefined}
           {...field}
           {...props}
+          label={
+            optional ? (
+              <OptionalLabel>{props.label}</OptionalLabel>
+            ) : (
+              props.label
+            )
+          }
         >
           {options.map((option) => (
             <SelectItem key={option.value}>{option.label}</SelectItem>

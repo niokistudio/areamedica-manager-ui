@@ -5,16 +5,19 @@ import {
   type FieldPath,
   type FieldValues,
 } from "react-hook-form"
+import { OptionalLabel } from "@/components/ui/form/OptionalLabel"
 
 interface TextFormFieldProps<TFieldValues extends FieldValues = FieldValues>
   extends InputProps {
   name: FieldPath<TFieldValues>
   control: Control<TFieldValues>
+  optional?: boolean
 }
 
 export function TextFormField<TFieldValues extends FieldValues = FieldValues>({
   name,
   control,
+  optional,
   ...props
 }: TextFormFieldProps<TFieldValues>) {
   return (
@@ -30,6 +33,14 @@ export function TextFormField<TFieldValues extends FieldValues = FieldValues>({
           isInvalid={fieldState.invalid}
           {...field}
           {...props}
+          className="placeholder:text-muted-foreground"
+          label={
+            optional ? (
+              <OptionalLabel>{props.label}</OptionalLabel>
+            ) : (
+              props.label
+            )
+          }
         />
       )}
     />
