@@ -143,7 +143,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
         }
       } catch (error) {
-        console.error("Token refresh error:", error)
+        console.debug("Token refresh error:", error)
         return {
           ...token,
           error: "RefreshAccessTokenError" as const,
