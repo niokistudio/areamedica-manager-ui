@@ -140,7 +140,9 @@
     "documentMinLength": "El documento debe tener al menos 5 dígitos",
     "documentMaxLength": "El documento no debe exceder los 10 dígitos",
     "invalidSelection": "Selección inválida",
-    "invalidEmail": "Ingresa un correo electrónico válido"
+    "invalidEmail": "Ingresa un correo electrónico válido",
+    "referenceMinLengthMobilePayment": "La referencia debe tener al menos 6 dígitos",
+    "referenceExactLengthTransfer": "La referencia debe tener exactamente 12 dígitos"
   },
   "ITransactions": {
     "TransactionType": {
