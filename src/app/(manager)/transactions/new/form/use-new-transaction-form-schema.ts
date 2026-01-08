@@ -26,104 +26,62 @@ export function useNewTransactionFormSchema() {
           reference: z.string().trim().min(1, t("required")),
         })
         .superRefine((data, ctx) => {
-          if (data.type === TransactionType.MobilePayment) {
-            // Document number is REQUIRED for MobilePayment
-            if (!data.documentNumber || data.documentNumber.length === 0) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: t("required"),
-                path: ["documentNumber"],
-              })
-            } else if (data.documentNumber.length < DOCUMENT_MIN_LENGTH) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: t("documentMinLength"),
-                path: ["documentNumber"],
-              })
-            } else if (data.documentNumber.length > DOCUMENT_MAX_LENGTH) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: t("documentMaxLength"),
-                path: ["documentNumber"],
-              })
-            } else if (!NUMERIC_ONLY_REGEX.test(data.documentNumber)) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: t("numericOnly"),
-                path: ["documentNumber"],
-              })
-            }
+          const isMobilePayment = data.type === TransactionType.MobilePayment
+          const isTransfer = data.type === TransactionType.Transfer
 
-            // Phone is REQUIRED for MobilePayment
-            if (!data.phone || data.phone.length === 0) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: t("required"),
-                path: ["phone"],
-              })
-            }
+          // Helper function to add validation issue
+          const addIssue = (path: string, message: string) => {
+            ctx.addIssue({
+              code: "custom",
+              message,
+              path: [path],
+            })
+          }
 
-            // Reference must be AT LEAST 6 characters (numeric only)
-            if (!NUMERIC_ONLY_REGEX.test(data.reference)) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: t("numericOnly"),
-                path: ["reference"],
-              })
-            } else if (
-              data.reference.length < REFERENCE_MIN_LENGTH_MOBILE_PAYMENT
-            ) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: t("referenceMinLengthMobilePayment"),
-                path: ["reference"],
-              })
+          // Helper function to validate document number format
+          const validateDocumentFormat = (documentNumber: string) => {
+            if (documentNumber.length < DOCUMENT_MIN_LENGTH) {
+              addIssue("documentNumber", t("documentMinLength"))
+            } else if (documentNumber.length > DOCUMENT_MAX_LENGTH) {
+              addIssue("documentNumber", t("documentMaxLength"))
+            } else if (!NUMERIC_ONLY_REGEX.test(documentNumber)) {
+              addIssue("documentNumber", t("numericOnly"))
             }
           }
 
-          if (data.type === TransactionType.Transfer) {
-            // Document number is OPTIONAL for Transfer
-            // If provided, validate format
-            if (data.documentNumber && data.documentNumber.length > 0) {
-              if (data.documentNumber.length < DOCUMENT_MIN_LENGTH) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: t("documentMinLength"),
-                  path: ["documentNumber"],
-                })
-              } else if (data.documentNumber.length > DOCUMENT_MAX_LENGTH) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: t("documentMaxLength"),
-                  path: ["documentNumber"],
-                })
-              } else if (!NUMERIC_ONLY_REGEX.test(data.documentNumber)) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: t("numericOnly"),
-                  path: ["documentNumber"],
-                })
-              }
+          // Validate document number
+          if (isMobilePayment) {
+            if (!data.documentNumber || data.documentNumber.length === 0) {
+              addIssue("documentNumber", t("required"))
+            } else {
+              validateDocumentFormat(data.documentNumber)
             }
+          } else if (
+            isTransfer &&
+            data.documentNumber &&
+            data.documentNumber.length > 0
+          ) {
+            validateDocumentFormat(data.documentNumber)
+          }
 
-            // Phone is OPTIONAL for Transfer (no validation needed)
+          // Validate phone
+          if (isMobilePayment && (!data.phone || data.phone.length === 0)) {
+            addIssue("phone", t("required"))
+          }
 
-            // Reference must be EXACTLY 12 characters (numeric only)
-            if (!NUMERIC_ONLY_REGEX.test(data.reference)) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: t("numericOnly"),
-                path: ["reference"],
-              })
-            } else if (
-              data.reference.length !== REFERENCE_EXACT_LENGTH_TRANSFER
-            ) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: t("referenceExactLengthTransfer"),
-                path: ["reference"],
-              })
-            }
+          // Validate reference
+          if (!NUMERIC_ONLY_REGEX.test(data.reference)) {
+            addIssue("reference", t("numericOnly"))
+          } else if (
+            isMobilePayment &&
+            data.reference.length < REFERENCE_MIN_LENGTH_MOBILE_PAYMENT
+          ) {
+            addIssue("reference", t("referenceMinLengthMobilePayment"))
+          } else if (
+            isTransfer &&
+            data.reference.length !== REFERENCE_EXACT_LENGTH_TRANSFER
+          ) {
+            addIssue("reference", t("referenceExactLengthTransfer"))
           }
         }),
     [t],
