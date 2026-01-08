@@ -1,37 +1,62 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
+import { routes } from "@/constants/routes"
 import { auth } from "./auth"
 
-export default async function middleware(request: NextRequest) {
-  const session = await auth()
+/**
+ * Routes that require authentication
+ */
+const protectedRoutes = [routes.transactions]
+
+/**
+ * Routes that are only accessible to unauthenticated users (guest routes)
+ */
+const guestRoutes = [routes.login]
+
+/**
+ * Default redirect for authenticated users trying to access guest routes
+ */
+const DEFAULT_AUTHENTICATED_REDIRECT = routes.transactions
+
+export default auth((request) => {
+  const isLoggedIn = !!request.auth
   const { pathname } = request.nextUrl
 
-  const isProtectedRoute = pathname.startsWith("/transactions")
-  const isAuthRoute = pathname.startsWith("/login")
+  // Check if the current route is protected
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route),
+  )
 
-  // Redirect unauthenticated users from protected routes
-  if (isProtectedRoute && !session) {
-    const loginUrl = new URL("/login", request.url)
+  // Redirect unauthenticated users from protected routes to login
+  if (isProtectedRoute && !isLoggedIn) {
+    const loginUrl = new URL(routes.login, request.url)
     loginUrl.searchParams.set("redirect", pathname)
     return NextResponse.redirect(loginUrl)
   }
 
-  // Redirect authenticated users away from login
-  if (isAuthRoute && session) {
-    return NextResponse.redirect(new URL("/transactions", request.url))
+  // Check if the current route is a guest-only route
+  const isGuestRoute = guestRoutes.some((route) => pathname.startsWith(route))
+
+  // Redirect authenticated users away from guest routes
+  if (isGuestRoute && isLoggedIn) {
+    return NextResponse.redirect(
+      new URL(DEFAULT_AUTHENTICATED_REDIRECT, request.url),
+    )
   }
 
   return NextResponse.next()
-}
+})
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public files (images, etc.)
-     */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+  /**
+   * Middleware matcher configuration
+   * Applies middleware to all routes EXCEPT:
+   * - /api/* - API routes (handled separately)
+   * - /_next/static/* - Next.js static files (CSS, JS bundles)
+   * - /_next/image/* - Next.js image optimization endpoint
+   * - /favicon.ico - Favicon file
+   *
+   * The regex pattern uses negative lookahead (?!...) to exclude these paths
+   * while matching everything else: /((?!excluded_patterns).*)/
+   */
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }

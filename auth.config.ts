@@ -16,26 +16,12 @@ export const authConfig = {
   // Pages configuration
   pages: {
     signIn: "/login",
-    error: "/login", // Redirect errors to login page
   },
 
   // Callbacks
   callbacks: {
-    // Control access to pages
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user
-      const isAuthPage = nextUrl.pathname.startsWith("/login")
-      const isProtectedPage = nextUrl.pathname.startsWith("/transactions")
-
-      if (isProtectedPage) {
-        return isLoggedIn
-      }
-      if (isAuthPage) {
-        if (isLoggedIn)
-          return Response.redirect(new URL("/transactions", nextUrl))
-        return true
-      }
-      return true
+    authorized({ auth }) {
+      return !!auth?.user
     },
   },
 

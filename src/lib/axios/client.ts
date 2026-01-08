@@ -1,6 +1,6 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios"
-import { getSession } from "next-auth/react"
 import { type APIError, APIErrorCode, type BackendError } from "@/types/api"
+import { getAccessToken } from "@/lib/auth/token-storage"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api"
 
@@ -16,15 +16,17 @@ export const axiosClient = axios.create({
 
 /**
  * Request interceptor
- * Adds authentication token from Auth.js session to requests
+ * Adds authentication token from module-level storage to requests
+ * Token is kept in sync with SessionProvider via SessionTokenSync component
+ * This avoids calling getSession() which triggers a network request
  */
 axiosClient.interceptors.request.use(
-  async (config: InternalAxiosRequestConfig) => {
-    // Get session from Auth.js
-    const session = await getSession()
+  (config: InternalAxiosRequestConfig) => {
+    // Get token from module-level storage (synchronous, no network request)
+    const accessToken = getAccessToken()
 
-    if (session?.accessToken && config.headers) {
-      config.headers.Authorization = `Bearer ${session.accessToken}`
+    if (accessToken && config.headers) {
+      config.headers.Authorization = `Bearer ${accessToken}`
     }
 
     return config
@@ -44,17 +46,16 @@ axiosClient.interceptors.response.use(
     // Return successful responses as-is
     return response
   },
-  async (error: AxiosError<BackendError | APIError>) => {
+  (error: AxiosError<BackendError | APIError>) => {
     // If 401, session has expired or is invalid
-    // Auth.js will handle refresh automatically on next request
-    // Client should redirect to login if refresh fails
+    // Auth.js will handle refresh automatically via SessionProvider
+    // SessionTokenSync will clear the token if refresh fails
     if (error.response?.status === 401) {
-      // Check if session has refresh error
-      const session = await getSession()
-      if (session?.error === "RefreshAccessTokenError") {
-        // Session refresh failed, user needs to re-login
+      const accessToken = getAccessToken()
+      if (!accessToken) {
+        // No valid token available, user needs to re-login
         // Redirect will be handled by middleware or components
-        console.error("Session expired, please login again")
+        console.error("[Axios] No valid access token available, please login again")
       }
     }
 

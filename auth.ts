@@ -90,66 +90,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           // Return user + tokens (stored in JWT)
           return {
-            ...user,
+            user,
             accessToken: authResponse.access_token,
             refreshToken: authResponse.refresh_token,
             accessTokenExpires: Date.now() + authResponse.expires_in * 1000,
           } as any
         } catch (error) {
-          console.error("Authorization error:", error)
+          console.debug("Authorization error:", error)
           return null
         }
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
-      // Initial sign in
-      if (account && user) {
-        // Cast user to any since it contains our custom properties from authorize()
-        const customUser = user as any
-        return {
-          user: {
-            id: customUser.id,
-            email: customUser.email,
-            full_name: customUser.full_name,
-            phone: customUser.phone,
-            national_id: customUser.national_id,
-            is_active: customUser.is_active,
-            is_verified: customUser.is_verified,
-            permissions: customUser.permissions,
-            created_at: customUser.created_at,
-            updated_at: customUser.updated_at,
-          } as User,
-          accessToken: customUser.accessToken,
-          refreshToken: customUser.refreshToken,
-          accessTokenExpires: customUser.accessTokenExpires,
-        }
-      }
-
-      // Return previous token if the access token has not expired yet
-      if (Date.now() < (token.accessTokenExpires || 0)) {
-        return token
-      }
-
-      // Access token has expired, try to refresh it
-      try {
-        const refreshedTokens = await refreshAccessToken(token.refreshToken)
-
-        return {
-          ...token,
-          accessToken: refreshedTokens.access_token,
-          refreshToken: refreshedTokens.refresh_token,
-          accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
-        }
-      } catch (error) {
-        console.debug("Token refresh error:", error)
-        return {
-          ...token,
-          error: "RefreshAccessTokenError" as const,
-        }
-      }
-    },
     async session({ session, token }) {
       if (token.error) {
         session.error = token.error
@@ -159,6 +112,43 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.accessToken = token.accessToken
 
       return session
+    },
+    async jwt({ token, user, account }) {
+      // Initial sign in
+      if (account && user) {
+        // Cast user to any since it contains our custom properties from authorize()
+        const customUser = user as any
+        return {
+          ...token,
+          user: customUser.user as User,
+          accessToken: customUser.accessToken,
+          refreshToken: customUser.refreshToken,
+          expiresAt: customUser.accessTokenExpires,
+        }
+      }
+
+      if (Date.now() < (token.expiresAt as number)) {
+        return token
+      }
+
+      // Access token has expired or is about to expire, try to refresh it
+      try {
+        const refreshedTokens = await refreshAccessToken(token.refreshToken)
+
+        return {
+          ...token,
+          accessToken: refreshedTokens.access_token,
+          refreshToken: refreshedTokens.refresh_token,
+          expiresAt: Date.now() + refreshedTokens.expires_in * 1000,
+          error: undefined, // Clear any previous errors
+        }
+      } catch (error) {
+        console.debug("Token refresh error:", error)
+        return {
+          ...token,
+          error: "RefreshAccessTokenError" as const,
+        }
+      }
     },
   },
 })
