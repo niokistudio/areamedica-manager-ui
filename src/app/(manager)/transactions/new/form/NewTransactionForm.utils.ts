@@ -8,7 +8,7 @@ import { decodePhone, encodePhone } from "@/utils/phone"
 export function mapNewTransactionFormToServer(
   form: INewTransactionForm,
 ): NewTransactionRequest {
-  return {
+  const request: NewTransactionRequest = {
     type: form.type,
     reference: form.reference,
     customer_full_name: form.name,
@@ -18,6 +18,13 @@ export function mapNewTransactionFormToServer(
     ),
     customer_phone: encodePhone(form.phonePrefix, form.phone || ""),
   }
+
+  // Only include a bank for MobilePayment transactions
+  if (form.bank) {
+    request.bank = form.bank
+  }
+
+  return request
 }
 
 export function mapServerToNewTransactionForm(
@@ -35,6 +42,7 @@ export function mapServerToNewTransactionForm(
     documentPrefix: documentPrefix || DocumentPrefix.Venezuelan,
     documentNumber: documentNumber || "",
     type: transaction.type,
+    bank: transaction.bank || "",
     reference: transaction.reference,
   }
 }

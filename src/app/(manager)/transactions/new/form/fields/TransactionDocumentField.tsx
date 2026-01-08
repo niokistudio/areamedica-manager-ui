@@ -44,6 +44,7 @@ export function TransactionDocumentField() {
         name="documentNumber"
         control={control}
         label={t("TransactionsPage.new.form.documentNumber")}
+        placeholder={t("TransactionsPage.new.form.documentNumberPlaceholder")}
         optional={transactionType === TransactionType.Transfer}
       />
     </div>

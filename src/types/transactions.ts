@@ -39,6 +39,7 @@ export interface Transaction {
   customer_phone: string // Customer's phone number
   customer_document: string // Customer's document/ID number
   type: TransactionType
+  bank?: string // Bank code
   amount?: string // Transaction amount (string from API)
   concept?: string // Transaction concept/description
   details?: TransactionDetails // Nested transaction details
@@ -48,6 +49,7 @@ export interface Transaction {
 
 export interface NewTransactionRequest {
   type: TransactionType
+  bank?: string // Bank code (required for MobilePayment)
   reference: string // Transaction reference number
   customer_full_name: string // Customer's full name
   customer_phone: string // Customer's phone number

@@ -12,6 +12,7 @@ export function TransactionNameField() {
       name="name"
       control={control}
       label={t("TransactionsPage.new.form.name")}
+      placeholder={t("TransactionsPage.new.form.namePlaceholder")}
     />
   )
 }

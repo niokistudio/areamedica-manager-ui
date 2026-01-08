@@ -49,6 +49,7 @@
           "mobilePayment": "Ingrese los últimos 6 dígitos"
         },
         "name": "Nombre",
+        "namePlaceholder": "Ingrese nombre completo",
         "phonePrefix": "Prefijo telefónico",
         "phonePrefixLabel": "Seleccionar prefijo telefónico",
         "phone": "Teléfono",
@@ -56,6 +57,9 @@
         "documentPrefix": "Tipo de documento",
         "documentPrefixLabel": "Seleccionar tipo de documento",
         "documentNumber": "Número de documento",
+        "documentNumberPlaceholder": "Ingrese número de documento",
+        "bank": "Banco de origen",
+        "bankPlaceholder": "Buscar por nombre del banco",
         "submit": "Consultar",
         "submitting": "Consultando...",
         "success": "Transacción consultada exitosamente",

@@ -26,6 +26,7 @@ export function useNewTransactionFormSchema() {
           documentPrefix: z.enum(DocumentPrefix, t("invalidSelection")),
           documentNumber: z.string().trim().optional(),
           type: z.enum(TransactionType, t("invalidSelection")),
+          bank: z.string().trim().optional(),
           reference: z.string().trim().min(1, t("required")),
         })
         .superRefine((data, ctx) => {
@@ -87,6 +88,11 @@ export function useNewTransactionFormSchema() {
             validatePhoneFormat(data.phone)
           }
 
+          // Validate bank
+          if (isMobilePayment && (!data.bank || data.bank.length === 0)) {
+            addIssue("bank", t("required"))
+          }
+
           // Validate reference
           if (!NUMERIC_ONLY_REGEX.test(data.reference)) {
             addIssue("reference", t("numericOnly"))
@@ -117,5 +123,6 @@ export const newTransactionFormDefaultValues: INewTransactionForm = {
   documentPrefix: DocumentPrefix.Venezuelan,
   documentNumber: "",
   type: TransactionType.MobilePayment,
+  bank: "",
   reference: "",
 }
