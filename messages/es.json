@@ -42,7 +42,6 @@
       "form": {
         "customerSection": "Información del Cliente",
         "transactionSection": "Información de la Transacción",
-        "bank": "Tipo de operación",
         "reference": "Número de referencia",
         "referencePlaceholder": {
           "transfer": "Ingrese los 12 dígitos de la referencia",
