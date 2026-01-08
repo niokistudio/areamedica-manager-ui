@@ -66,7 +66,7 @@ export function LoginForm() {
 
   return (
     <FormProvider handleSubmit={handleSubmit} {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} autoComplete="on">
         <LoginFormContent isLoading={isLoading} />
       </form>
     </FormProvider>

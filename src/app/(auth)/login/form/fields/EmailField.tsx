@@ -14,7 +14,7 @@ export function EmailField() {
       label={t("email.label")}
       placeholder={t("email.placeholder")}
       type="email"
-      autoComplete="email"
+      autoComplete="username email"
       variant="underlined"
     />
   )
