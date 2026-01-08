@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl"
 import type { Transaction } from "@/types/transactions"
 
 import { formatDocument } from "@/utils/document"
+import { formatPhone } from "@/utils/phone"
 
 interface TransactionCustomerInfoProps {
   transaction: Transaction
@@ -27,7 +28,9 @@ export function TransactionCustomerInfo({
         {/* Customer Phone */}
         <div>
           <p className="text-sm text-muted-foreground">{t("phone")}</p>
-          <p className="text-base font-medium">{transaction.customer_phone}</p>
+          <p className="text-base font-medium">
+            {formatPhone(transaction.customer_phone) || "-"}
+          </p>
         </div>
 
         {/* Customer National ID */}

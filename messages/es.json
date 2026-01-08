@@ -49,7 +49,10 @@
           "mobilePayment": "Ingrese los últimos 6 dígitos"
         },
         "name": "Nombre",
+        "phonePrefix": "Prefijo telefónico",
+        "phonePrefixLabel": "Seleccionar prefijo telefónico",
         "phone": "Teléfono",
+        "phonePlaceholder": "Ingrese número de teléfono",
         "documentPrefix": "Tipo de documento",
         "documentPrefixLabel": "Seleccionar tipo de documento",
         "documentNumber": "Número de documento",
@@ -139,6 +142,7 @@
     "numericOnly": "Solo debe contener números",
     "documentMinLength": "El documento debe tener al menos 5 dígitos",
     "documentMaxLength": "El documento no debe exceder los 10 dígitos",
+    "phoneExactLength": "El teléfono debe tener 7 dígitos",
     "invalidSelection": "Selección inválida",
     "invalidEmail": "Ingresa un correo electrónico válido",
     "referenceMinLengthMobilePayment": "La referencia debe tener al menos 6 dígitos",

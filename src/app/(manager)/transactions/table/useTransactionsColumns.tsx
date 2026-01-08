@@ -12,6 +12,7 @@ import { DefaultTableCell } from "@/components/ui/table-cells/DefaultTableCell"
 import { routes } from "@/constants/routes"
 import type { Transaction } from "@/types/transactions"
 import { formatDocument } from "@/utils/document"
+import { formatPhone } from "@/utils/phone"
 import type {
   TransactionColumn,
   TransactionColumnKey,
@@ -67,7 +68,11 @@ const columnRenderers: Partial<
     </DefaultTableCell>
   ),
   name: "customer_full_name",
-  phone: "customer_phone",
+  phone: (transaction) => (
+    <DefaultTableCell className="break-keep text-nowrap">
+      {formatPhone(transaction.customer_phone) || "-"}
+    </DefaultTableCell>
+  ),
 }
 
 /**

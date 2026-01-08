@@ -2,11 +2,13 @@ import { useTranslations } from "next-intl"
 import { useMemo } from "react"
 import z from "zod"
 import { DocumentPrefix } from "@/types/document"
+import { PhonePrefix } from "@/types/phone"
 import { TransactionType } from "@/types/transactions"
 
 // Validation constants
 const DOCUMENT_MIN_LENGTH = 5
 const DOCUMENT_MAX_LENGTH = 10
+const PHONE_EXACT_LENGTH = 7
 const NUMERIC_ONLY_REGEX = /^[0-9]+$/
 const REFERENCE_MIN_LENGTH_MOBILE_PAYMENT = 6
 const REFERENCE_EXACT_LENGTH_TRANSFER = 12
@@ -19,6 +21,7 @@ export function useNewTransactionFormSchema() {
       z
         .object({
           name: z.string().trim().min(1, t("required")),
+          phonePrefix: z.enum(PhonePrefix, t("invalidSelection")),
           phone: z.string().trim().optional(),
           documentPrefix: z.enum(DocumentPrefix, t("invalidSelection")),
           documentNumber: z.string().trim().optional(),
@@ -49,6 +52,15 @@ export function useNewTransactionFormSchema() {
             }
           }
 
+          // Helper function to validate phone number format
+          const validatePhoneFormat = (phone: string) => {
+            if (!NUMERIC_ONLY_REGEX.test(phone)) {
+              addIssue("phone", t("numericOnly"))
+            } else if (phone.length !== PHONE_EXACT_LENGTH) {
+              addIssue("phone", t("phoneExactLength"))
+            }
+          }
+
           // Validate document number
           if (isMobilePayment) {
             if (!data.documentNumber || data.documentNumber.length === 0) {
@@ -65,8 +77,14 @@ export function useNewTransactionFormSchema() {
           }
 
           // Validate phone
-          if (isMobilePayment && (!data.phone || data.phone.length === 0)) {
-            addIssue("phone", t("required"))
+          if (isMobilePayment) {
+            if (!data.phone || data.phone.length === 0) {
+              addIssue("phone", t("required"))
+            } else {
+              validatePhoneFormat(data.phone)
+            }
+          } else if (isTransfer && data.phone && data.phone.length > 0) {
+            validatePhoneFormat(data.phone)
           }
 
           // Validate reference
@@ -94,6 +112,7 @@ export type INewTransactionForm = z.infer<
 
 export const newTransactionFormDefaultValues: INewTransactionForm = {
   name: "",
+  phonePrefix: PhonePrefix["0412"],
   phone: "",
   documentPrefix: DocumentPrefix.Venezuelan,
   documentNumber: "",
