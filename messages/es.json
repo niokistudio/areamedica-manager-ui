@@ -59,11 +59,13 @@
         "documentNumberPlaceholder": "Ingrese número de documento",
         "bank": "Banco de origen",
         "bankPlaceholder": "Buscar por nombre del banco",
+        "operationDate": "Fecha de operación",
         "submit": "Consultar",
         "submitting": "Consultando...",
         "success": "Transacción consultada exitosamente",
         "error": "Error al consultar la transacción",
-        "duplicateReference": "Esta referencia ya está en uso o ya fue consultada anteriormente"
+        "duplicateReference": "Esta referencia ya está en uso",
+        "duplicateReferenceLink": "Ver transacción ({reference})"
       }
     },
     "toolbar": {
@@ -149,7 +151,8 @@
     "invalidSelection": "Selección inválida",
     "invalidEmail": "Ingresa un correo electrónico válido",
     "referenceMinLengthMobilePayment": "La referencia debe tener al menos 6 dígitos",
-    "referenceExactLengthTransfer": "La referencia debe tener exactamente 12 dígitos"
+    "referenceExactLengthTransfer": "La referencia debe tener exactamente 12 dígitos",
+    "operationDateNotInFuture": "La fecha de operación no puede ser en el futuro"
   },
   "ITransactions": {
     "TransactionType": {

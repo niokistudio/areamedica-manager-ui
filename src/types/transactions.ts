@@ -1,3 +1,5 @@
+import type { VenezuelanBankCode } from "@/types/banks"
+
 export enum TransactionStatus {
   InProgress = "IN_PROGRESS",
   Completed = "COMPLETED",
@@ -47,61 +49,19 @@ export interface Transaction {
   updated_at: string // ISO 8601 timestamp
 }
 
-export interface NewTransactionRequest {
-  type: TransactionType
-  bank?: string // Bank code (required for MobilePayment)
+export interface FullReferenceTransactionRequest {
   reference: string // Transaction reference number
+  customer_full_name: string // Customer's full name
+  customer_phone?: string // Customer's phone number
+  customer_document?: string // Customer's document/ID number
+}
+
+export interface PartialReferenceTransactionRequest {
+  reference_number: string // Transaction reference number
+  phone_number: string
+  operation_date: string
+  bank_code: VenezuelanBankCode
   customer_full_name: string // Customer's full name
   customer_phone: string // Customer's phone number
   customer_document: string // Customer's document/ID number
-}
-
-// Legacy code
-//
-// export enum TransactionType {
-//   TRANSACTION = "TRANSACTION",
-//   COMMISSION = "COMMISSION",
-//   OTHER = "OTHER",
-// }
-
-// Puede ser banesco o pagomovil, usar esto para discriminar el tipo de de formulario que se debe usar
-// export enum BankType {
-//   BANESCO = "BANESCO",
-//   MOBILE_TRANSFER = "MOBILE_TRANSFER",
-// }
-
-// export interface Transaction {
-//   id: string
-//   transaction_id: string
-//   reference: string
-//   bank: BankType
-//   transaction_type: TransactionType
-//   status: TransactionStatus
-//   amount: number
-//   customer_full_name: string
-//   customer_phone: string
-//   customer_national_id: string
-//   concept: string
-//   extra_data: Record<string, unknown>
-//   created_by: string
-//   created_at: string
-//   updated_at: string
-// }
-
-export interface CreateTransactionRequest {
-  bank: string
-  reference: string
-  customer_full_name?: string
-  customer_national_id?: string
-  customer_phone?: string
-}
-
-export interface UpdateTransactionRequest {
-  id: string
-  status?: TransactionStatus
-  customer_full_name?: string
-  customer_phone?: string
-  customer_national_id?: string
-  concept?: string
-  extra_data?: Record<string, unknown>
 }

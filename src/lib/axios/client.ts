@@ -1,6 +1,6 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios"
-import { type APIError, APIErrorCode, type BackendError } from "@/types/api"
 import { getAccessToken } from "@/lib/auth/token-storage"
+import { type APIError, APIErrorCode, type BackendError } from "@/types/api"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api"
 
@@ -55,8 +55,14 @@ axiosClient.interceptors.response.use(
       if (!accessToken) {
         // No valid token available, user needs to re-login
         // Redirect will be handled by middleware or components
-        console.error("[Axios] No valid access token available, please login again")
+        console.error(
+          "[Axios] No valid access token available, please login again",
+        )
       }
+    }
+
+    if (error.response?.status === 422) {
+      return Promise.reject(error)
     }
 
     // Transform error into a consistent format

@@ -27,4 +27,6 @@ export const VenezuelanBankMap: Record<string, string> = {
   "0178": "N58 Banco Digital",
   "0191": "Banco Nacional de Crédito (BNC)",
   "0601": "Instituto Municipal de Crédito Popular",
-}
+} as const
+
+export type VenezuelanBankCode = keyof typeof VenezuelanBankMap

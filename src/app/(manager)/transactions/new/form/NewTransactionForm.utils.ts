@@ -1,16 +1,46 @@
+import type { DateValue } from "@internationalized/date"
 import type { INewTransactionForm } from "@/app/(manager)/transactions/new/form/use-new-transaction-form-schema"
 import { DocumentPrefix } from "@/types/document"
 import { PhonePrefix } from "@/types/phone"
-import type { NewTransactionRequest, Transaction } from "@/types/transactions"
+import type {
+  FullReferenceTransactionRequest,
+  PartialReferenceTransactionRequest,
+  Transaction,
+} from "@/types/transactions"
 import { decodeDocument, encodeDocument } from "@/utils/document"
 import { decodePhone, encodePhone } from "@/utils/phone"
 
-export function mapNewTransactionFormToServer(
+function formatDateValue(date: DateValue | null): string {
+  if (!date) return ""
+  const year = date.year
+  const month = String(date.month).padStart(2, "0")
+  const day = String(date.day).padStart(2, "0")
+  return `${year}-${month}-${day}`
+}
+
+export function mapNewTransactionFormToFullReference(
   form: INewTransactionForm,
-): NewTransactionRequest {
-  const request: NewTransactionRequest = {
-    type: form.type,
+): FullReferenceTransactionRequest {
+  return {
     reference: form.reference,
+    customer_full_name: form.name,
+    customer_document: form.documentNumber
+      ? encodeDocument(form.documentPrefix, form.documentNumber)
+      : undefined,
+    customer_phone: form.phone
+      ? encodePhone(form.phonePrefix, form.phone)
+      : undefined,
+  }
+}
+
+export function mapNewTransactionFormToPartialReference(
+  form: INewTransactionForm,
+): PartialReferenceTransactionRequest {
+  return {
+    reference_number: form.reference,
+    phone_number: encodePhone(form.phonePrefix, form.phone || ""),
+    operation_date: formatDateValue(form.operationDate),
+    bank_code: form.bank || "",
     customer_full_name: form.name,
     customer_document: encodeDocument(
       form.documentPrefix,
@@ -18,13 +48,6 @@ export function mapNewTransactionFormToServer(
     ),
     customer_phone: encodePhone(form.phonePrefix, form.phone || ""),
   }
-
-  // Only include a bank for MobilePayment transactions
-  if (form.bank) {
-    request.bank = form.bank
-  }
-
-  return request
 }
 
 export function mapServerToNewTransactionForm(
@@ -43,6 +66,7 @@ export function mapServerToNewTransactionForm(
     documentNumber: documentNumber || "",
     type: transaction.type,
     bank: transaction.bank || "",
+    operationDate: null,
     reference: transaction.reference,
   }
 }

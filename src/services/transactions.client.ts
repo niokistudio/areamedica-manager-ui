@@ -1,9 +1,27 @@
 import { apiRoutes } from "@/constants/api-routes"
 import { axiosClient } from "@/lib/axios/client"
-import type { NewTransactionRequest, Transaction } from "@/types/transactions"
+import type {
+  FullReferenceTransactionRequest,
+  PartialReferenceTransactionRequest,
+  Transaction,
+} from "@/types/transactions"
 
-export async function createTransaction(request: NewTransactionRequest) {
-  return await axiosClient.post<Transaction>(apiRoutes.transactions, request)
+export async function createFullReferenceTransaction(
+  request: FullReferenceTransactionRequest,
+) {
+  return await axiosClient.post<Transaction>(
+    `${apiRoutes.transactions}/full-reference`,
+    request,
+  )
+}
+
+export async function createPartialReferenceTransaction(
+  request: PartialReferenceTransactionRequest,
+) {
+  return await axiosClient.post<Transaction>(
+    `${apiRoutes.transactions}/partial-reference`,
+    request,
+  )
 }
 
 /**

@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl"
 import { TransactionBankField } from "@/app/(manager)/transactions/new/form/fields/TransactionBankField"
 import { TransactionDocumentField } from "@/app/(manager)/transactions/new/form/fields/TransactionDocumentField"
 import { TransactionNameField } from "@/app/(manager)/transactions/new/form/fields/TransactionNameField"
+import { TransactionOperationDateField } from "@/app/(manager)/transactions/new/form/fields/TransactionOperationDateField"
 import { TransactionPhoneField } from "@/app/(manager)/transactions/new/form/fields/TransactionPhoneField"
 import { TransactionReferenceField } from "@/app/(manager)/transactions/new/form/fields/TransactionReferenceField"
 import { TransactionTypeField } from "@/app/(manager)/transactions/new/form/fields/TransactionTypeField"
@@ -27,6 +28,7 @@ export function NewTransactionFormContent({
           <TransactionTypeField />
           <TransactionReferenceField />
           <TransactionBankField />
+          <TransactionOperationDateField />
         </div>
       </div>
       {/* Customer Information Section */}

@@ -1,11 +1,14 @@
 import { addToast } from "@heroui/toast"
 import { zodResolver } from "@hookform/resolvers/zod"
+import type { AxiosError } from "axios"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { useCallback, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import {
-  mapNewTransactionFormToServer,
+  mapNewTransactionFormToFullReference,
+  mapNewTransactionFormToPartialReference,
   mapServerToNewTransactionForm,
 } from "@/app/(manager)/transactions/new/form/NewTransactionForm.utils"
 import { NewTransactionFormContent } from "@/app/(manager)/transactions/new/form/NewTransactionFormContent"
@@ -15,9 +18,11 @@ import {
   useNewTransactionFormSchema,
 } from "@/app/(manager)/transactions/new/form/use-new-transaction-form-schema"
 import { routes } from "@/constants/routes"
-import { createTransaction } from "@/services/transactions.client"
-import type { APIError } from "@/types/api"
-import type { Transaction } from "@/types/transactions"
+import {
+  createFullReferenceTransaction,
+  createPartialReferenceTransaction,
+} from "@/services/transactions.client"
+import { type Transaction, TransactionType } from "@/types/transactions"
 
 interface NewTransactionFormProps {
   transaction?: Transaction
@@ -36,35 +41,71 @@ export function NewTransactionForm({ transaction }: NewTransactionFormProps) {
     resolver: zodResolver(schema),
   })
 
+  const createTransactions = useCallback((form: INewTransactionForm) => {
+    if (form.type === TransactionType.Transfer) {
+      return createFullReferenceTransaction(
+        mapNewTransactionFormToFullReference(form),
+      )
+    }
+    return createPartialReferenceTransaction(
+      mapNewTransactionFormToPartialReference(form),
+    )
+  }, [])
+
   const onSubmit = useCallback(
     async (form: INewTransactionForm) => {
       setIsLoading(true)
       try {
-        const response = await createTransaction(
-          mapNewTransactionFormToServer(form),
-        )
+        const response = await createTransactions(form)
         addToast({
           title: t("success"),
           severity: "success",
         })
         router.push(routes.transactionDetail(response.data.id))
       } catch (error) {
-        const apiError = error as APIError
-        const isAlreadyInUse = apiError.status === 422
+        const responseError = error as AxiosError<{
+          error: {
+            code: string
+            details?: {
+              existing_transaction_id: string
+              reference: string
+            }
+            message: string
+          }
+        }>
+        const isAlreadyInUse =
+          responseError.status === 422 &&
+          responseError.response?.data?.error?.code === "DUPLICATE_REFERENCE"
+
         const errorMessage = isAlreadyInUse
           ? t("duplicateReference")
-          : apiError.message || t("error")
+          : t("error")
+
+        const details = responseError.response?.data?.error?.details
+        const duplicateDescription =
+          isAlreadyInUse && details ? (
+            <Link
+              href={routes.transactionDetail(details.existing_transaction_id)}
+              className="underline"
+            >
+              {t("duplicateReferenceLink", { reference: details.reference })}
+            </Link>
+          ) : undefined
+
         addToast({
           title: errorMessage,
-          severity: "danger",
-          color: "danger",
+          description:
+            duplicateDescription ||
+            responseError.response?.data?.error?.message,
+          severity: isAlreadyInUse ? "warning" : "danger",
+          color: isAlreadyInUse ? "warning" : "danger",
           timeout: isAlreadyInUse ? Infinity : undefined,
         })
       } finally {
         setIsLoading(false)
       }
     },
-    [t, router],
+    [t, router, createTransactions],
   )
 
   return (

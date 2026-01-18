@@ -1,9 +1,17 @@
+import type { DateValue } from "@internationalized/date"
+import { getLocalTimeZone, today } from "@internationalized/date"
 import { useTranslations } from "next-intl"
 import { useMemo } from "react"
 import z from "zod"
 import { DocumentPrefix } from "@/types/document"
 import { PhonePrefix } from "@/types/phone"
 import { TransactionType } from "@/types/transactions"
+
+// Custom zod type for DateValue
+const dateValueSchema = z.custom<DateValue>(
+  (val) => val !== null && typeof val === "object" && "calendar" in val,
+  { message: "Invalid date" },
+)
 
 // Validation constants
 const DOCUMENT_MIN_LENGTH = 5
@@ -27,6 +35,7 @@ export function useNewTransactionFormSchema() {
           documentNumber: z.string().trim().optional(),
           type: z.enum(TransactionType, t("invalidSelection")),
           bank: z.string().trim().optional(),
+          operationDate: dateValueSchema.nullable(),
           reference: z.string().trim().min(1, t("required")),
         })
         .superRefine((data, ctx) => {
@@ -93,6 +102,18 @@ export function useNewTransactionFormSchema() {
             addIssue("bank", t("required"))
           }
 
+          // Validate operation date
+          if (isMobilePayment) {
+            if (!data.operationDate) {
+              addIssue("operationDate", t("required"))
+            } else {
+              const todayDate = today(getLocalTimeZone())
+              if (data.operationDate.compare(todayDate) > 0) {
+                addIssue("operationDate", t("operationDateNotInFuture"))
+              }
+            }
+          }
+
           // Validate reference
           if (!NUMERIC_ONLY_REGEX.test(data.reference)) {
             addIssue("reference", t("numericOnly"))
@@ -124,5 +145,6 @@ export const newTransactionFormDefaultValues: INewTransactionForm = {
   documentNumber: "",
   type: TransactionType.MobilePayment,
   bank: "",
+  operationDate: null,
   reference: "",
 }
